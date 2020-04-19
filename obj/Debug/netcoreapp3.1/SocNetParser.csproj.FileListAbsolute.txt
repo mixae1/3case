@@ -1,0 +1,13 @@
+C:\Users\Mixael\Source\Repos\mixae1\3case\bin\Debug\netcoreapp3.1\SocNetParser.exe
+C:\Users\Mixael\Source\Repos\mixae1\3case\bin\Debug\netcoreapp3.1\SocNetParser.deps.json
+C:\Users\Mixael\Source\Repos\mixae1\3case\bin\Debug\netcoreapp3.1\SocNetParser.runtimeconfig.json
+C:\Users\Mixael\Source\Repos\mixae1\3case\bin\Debug\netcoreapp3.1\SocNetParser.runtimeconfig.dev.json
+C:\Users\Mixael\Source\Repos\mixae1\3case\bin\Debug\netcoreapp3.1\SocNetParser.dll
+C:\Users\Mixael\Source\Repos\mixae1\3case\bin\Debug\netcoreapp3.1\SocNetParser.pdb
+C:\Users\Mixael\Source\Repos\mixae1\3case\obj\Debug\netcoreapp3.1\SocNetParser.csprojAssemblyReference.cache
+C:\Users\Mixael\Source\Repos\mixae1\3case\obj\Debug\netcoreapp3.1\SocNetParser.csproj.CoreCompileInputs.cache
+C:\Users\Mixael\Source\Repos\mixae1\3case\obj\Debug\netcoreapp3.1\SocNetParser.AssemblyInfoInputs.cache
+C:\Users\Mixael\Source\Repos\mixae1\3case\obj\Debug\netcoreapp3.1\SocNetParser.AssemblyInfo.cs
+C:\Users\Mixael\Source\Repos\mixae1\3case\obj\Debug\netcoreapp3.1\SocNetParser.dll
+C:\Users\Mixael\Source\Repos\mixae1\3case\obj\Debug\netcoreapp3.1\SocNetParser.pdb
+C:\Users\Mixael\Source\Repos\mixae1\3case\obj\Debug\netcoreapp3.1\SocNetParser.genruntimeconfig.cache

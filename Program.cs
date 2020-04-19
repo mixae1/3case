@@ -12,7 +12,7 @@ namespace SocNetParser
         static Regex vk = new Regex(@"vk\.com\/\w+");
         static Regex mail = new Regex(@"\w[\w\d_\-]*@\w+\.\w{1,3}");
         static Regex phone = new Regex(@"\D(?<num>\+?[78]\ ?\(?\d{3}\)?\ ?\d{3}([ \-]?)\d{2}\1\d{2})\D");
-        static Regex adress = new Regex(@"[^>]* ?(ул\.|просп\.|пер\.|д\.) ?[^<]*");
+        static Regex adress = new Regex(@"[^>\n]{0,50}(ул\.|просп\.|пер\.|д\.)[^<\n]{0,50}");
 
         static HashSet<string> SiteSearching(string site)
         {
@@ -20,10 +20,10 @@ namespace SocNetParser
             //https://rris.ru/rostov-na-donu-001/ some troubles
 
             //1
-            var buf = new StreamReader(((HttpWebResponse)WebRequest.Create(site).GetResponse()).GetResponseStream()).ReadToEnd();
+            //var buf = new StreamReader(((HttpWebResponse)WebRequest.Create(site).GetResponse()).GetResponseStream()).ReadToEnd();
 
             //2
-            //var buf = new WebClient().DownloadString(site);
+            var buf = new WebClient().DownloadString(site);
 
             //3
             //WebClient web = new WebClient();
@@ -34,20 +34,20 @@ namespace SocNetParser
             HashSet<string> hs = new HashSet<string>();
 
             var result = face.Match(buf);
-            hs.Add(result.Value);
+            hs.Add(result.Value.TrimStart());
             result = inst.Match(buf);
-            hs.Add(result.Value);
+            hs.Add(result.Value.TrimStart());
             result = vk.Match(buf);
-            hs.Add(result.Value);
+            hs.Add(result.Value.TrimStart());
 
             var results = mail.Matches(buf);
-            foreach (var s in results) hs.Add(s.ToString());
+            foreach (var s in results) hs.Add(s.ToString().TrimStart());
             results = phone.Matches(buf);
-            foreach (Match s in results) hs.Add(s.Groups["num"].ToString());
+            foreach (Match s in results) hs.Add(s.Groups["num"].ToString().TrimStart());
             results = adress.Matches(buf);
-            foreach (var s in results) hs.Add(s.ToString());
+            foreach (var s in results) hs.Add(s.ToString().TrimStart());
 
-            return hs;
+            return hs; //надо почистить от пустых строк
         }
 
         static void Main(string[] args)
