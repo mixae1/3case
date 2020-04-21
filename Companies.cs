@@ -8,6 +8,12 @@ namespace SocNetParser
     //вынести в отдельный файл
     class Companies
     {
+
+        public const string RND_COMPS_URL = "https://rostov-na-donu.jsprav.ru/avtosalonyi/";
+        public static string test = "https://rostov-na-donu.jsprav.ru/magazinyi-avtozapchastej-i-avtotovarov/pihtinavto3314.html";
+
+   public   static  Regex websites = new Regex(@"\D?http[s]?:\/\/([а-яА-Яa-zA-Z0-9]\.?)+\.\w{1,4}\D?");
+
         /// <summary>
         /// получаем список компаний определенного бизнес сектора 
         /// TODO : сделать для любого бизнеса
@@ -19,7 +25,7 @@ namespace SocNetParser
             List<Company> Comps = new List<Company>();
            
 
-                WebRequest webr = WebRequest.Create(ParserINN.RND_COMPS_URL);// 1/2 мс
+                WebRequest webr = WebRequest.Create(RND_COMPS_URL);// 1/2 мс
                 WebResponse webresp = webr.GetResponse();//40-50 мс
                 var t = webresp.GetResponseStream();//620-655мс
                 var temp = new StreamReader(t);//2мс
@@ -41,8 +47,11 @@ namespace SocNetParser
                     ad.Add(xx.ToString());
                 // Console.WriteLine(string.IsNullOrEmpty(adrs));
 
+
+                string web = websites.Match(x.Value).Value;
+                
                 string name = Regex.Match(x.Value, @"<a class=\Dlnk\D[\s\S]+?>([\s\S]+?)<\/a>").Groups[1].Value;//2-3мс
-                    Comps.Add(new Company(name,address,ad));//3-4 мс
+                    Comps.Add(new Company(name,address,ad,web));//3-4 мс
                 }
 
             return Comps;
