@@ -22,16 +22,15 @@ namespace SocNetParser
             //File.WriteAllText("t2.txt", File.ReadAllText("ris.html"));
             //https://rris.ru/rostov-na-donu-001/ some troubles
 
+            WebClient webclient = new WebClient();
+            webclient.Headers.Add(HttpRequestHeader.UserAgent, "");
             //1
-            //var buf = new StreamReader(((HttpWebResponse)WebRequest.Create(site).GetResponse()).GetResponseStream()).ReadToEnd();
+            var buf = webclient.DownloadString(site);
+            var data = webclient.DownloadData(site);
 
             //2
-            var buf = new WebClient().DownloadString(site);
-
-            //3
-            //WebClient web = new WebClient();
-            //web.DownloadFile(site, "buf");
-            //var buf = File.ReadAllText("buf");
+            //web.DownloadFile(site, "buf.txt");
+            //var buf = File.ReadAllText("buf.txt");
 
 
             HashSet<string> hs = new HashSet<string>();
