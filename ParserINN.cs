@@ -75,7 +75,7 @@ namespace SocNetParser
         /// метод чисто для проверки ,потом его удалить 
         /// </summary>
         /// <param name="lst"></param>
-        static void PrintCompanyInfo(List<Company> lst)
+        public static void PrintCompanyInfo(List<Company> lst)
         {
             foreach (var temp in lst)
             {
@@ -86,30 +86,6 @@ namespace SocNetParser
                     Console.WriteLine(tmp);
                 Console.WriteLine("//////////");
             }
-        }
-
-
-        static void Main(string[] args)
-        {
-
-            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-            sw.Start();
-            var t = Companies.GetCompanies();
-            sw.Stop();
-
-            Console.WriteLine(sw.ElapsedMilliseconds);
-            PrintCompanyInfo(t);
-
-            /*
-              WebRequest webr = WebRequest.Create(ParserINN.RND_COMPS_URL);
-              WebResponse webresp = webr.GetResponse();
-              var t = webresp.GetResponseStream();
-              var temp = new StreamReader(t);
-             // Console.WriteLine(temp.ReadToEnd());
-              var tempp = Parser.adress.Matches(temp.ReadToEnd());
-              foreach (Match s in tempp)
-                  Console.WriteLine(s.ToString());
-              */
         }
     }
 }

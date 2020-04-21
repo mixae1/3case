@@ -18,7 +18,7 @@ namespace SocNetParser
         public static Regex phone = new Regex(@"\D(?<num>\+?[78]\ ?\(?\d{3}\)?\ ?\d{3}([ \-]?)\d{2}\1\d{2})\D");
         public static Regex adress = new Regex(@"[^>\n]{0,50}(улица|ул\.|просп\.|пер\.|д\.)[^<\n]{0,50}");
 
-        static HashSet<string> SiteSearching(string site)
+        public static HashSet<string> SiteSearching(string site)
         {
             //File.WriteAllText("t2.txt", File.ReadAllText("ris.html"));
             //https://rris.ru/rostov-na-donu-001/ some troubles
@@ -26,11 +26,13 @@ namespace SocNetParser
             WebClient webclient = new WebClient();
             webclient.Headers.Add(HttpRequestHeader.UserAgent, "");
             //1
-            var buf = webclient.DownloadString(site);
-            var data = webclient.DownloadData(site);
-            string download = Encoding.ASCII.GetString(data);
-            System.Console.WriteLine(download);
+            //var buf = webclient.DownloadString(site);
+            
             //2
+            //var data = webclient.DownloadData(site);
+            //string buf = Encoding.UTF8.GetString(data);
+            
+            //3
             //web.DownloadFile(site, "buf.txt");
             //var buf = File.ReadAllText("buf.txt");
 
