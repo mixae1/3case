@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Net;
+using System.Text;
 namespace SocNetParser
 {
 
@@ -27,7 +28,8 @@ namespace SocNetParser
             //1
             var buf = webclient.DownloadString(site);
             var data = webclient.DownloadData(site);
-
+            string download = Encoding.ASCII.GetString(data);
+            System.Console.WriteLine(download);
             //2
             //web.DownloadFile(site, "buf.txt");
             //var buf = File.ReadAllText("buf.txt");
