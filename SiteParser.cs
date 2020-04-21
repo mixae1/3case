@@ -26,7 +26,7 @@ namespace SocNetParser
             WebClient webclient = new WebClient();
             webclient.Headers.Add(HttpRequestHeader.UserAgent, "");
             //1
-            //var buf = webclient.DownloadString(site);
+            var buf = webclient.DownloadString(site);
             
             //2
             //var data = webclient.DownloadData(site);
