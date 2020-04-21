@@ -5,17 +5,17 @@ using System.Net;
 namespace SocNetParser
 {
 
-    //office@autora-rus.ru - доработать регулярку по почтам
-    //Россия, Ростов-на-Дону, Депутатская улица, 5а - дорабоать регулярку по адресам
+    //office@autora-rus.ru - доработать регулярку по почтам + 
+    //Россия, Ростов-на-Дону, Депутатская улица, 5а - дорабоать регулярку по адресам +
 
     class SiteParser
     {
         static Regex face = new Regex(@"facebook\.com\/\w+");
         static Regex inst = new Regex(@"instagram\.com\/\w+");
         static Regex vk = new Regex(@"vk\.com\/\w+");
-        public static Regex mail = new Regex(@"\w[\w\d_\-]{0,15}\@\w{4,9}\.\w{1,3}");
+        public static Regex mail = new Regex(@"\w[\w\d_\-]{0,15}\@[\w\-]{4,9}\.\w{1,3}");
         public static Regex phone = new Regex(@"\D(?<num>\+?[78]\ ?\(?\d{3}\)?\ ?\d{3}([ \-]?)\d{2}\1\d{2})\D");
-        public static Regex adress = new Regex(@"[^>\n]{0,50}(ул\.|просп\.|пер\.|д\.)[^<\n]{0,50}");
+        public static Regex adress = new Regex(@"[^>\n]{0,50}(улица|ул\.|просп\.|пер\.|д\.)[^<\n]{0,50}");
 
         static HashSet<string> SiteSearching(string site)
         {
