@@ -15,15 +15,26 @@ namespace SocNetParser
         public HashSet<string> adress { get; set; }
 
         public HashSet<string> emails { get; set; }
-
+        //ссылка на сайт компании
         public string website { get; set; }
 
-        public Company(string name, HashSet<string> adress, HashSet<string> hs,string web)
+        public List<string> phones { get; set; }
+
+        /// <summary>
+        /// основной конструктор
+        /// </summary>
+        /// <param name="nm">имя организации </param>
+        /// <param name="adrs">адреса оргн-ии </param>
+        /// <param name="hs">элект-ые почты </param>
+        /// <param name="web">сайт орг-ции</param>
+        /// <param name="phn"> теле-ны огр-ии</param>
+        public Company(string nm, HashSet<string> adrs, HashSet<string> hs,string web,List<string> phn)
         {
-            this.adress = adress;
+            adress = adrs;
             emails = hs;
-            this.name = name;
+            name = nm;
             website = web;
+            phones = phn;
         }
 
         public Company(string name, HashSet<string> adress, HashSet<string> hs)

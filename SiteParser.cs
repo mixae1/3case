@@ -16,7 +16,7 @@ namespace SocNetParser
         static Regex vk = new Regex(@"vk\.com\/\w+");
         public static Regex mail = new Regex(@"\w[\w\d_\-]{0,15}\@[\w\-]{4,9}\.\w{1,3}");
         public static Regex phone = new Regex(@"\D(?<num>\+?[78]\ ?\(?\d{3}\)?\ ?\d{3}([ \-]?)\d{2}\1\d{2})\D");
-        public static Regex adress = new Regex(@"[^>\n]{0,50}(улица|ул\.|просп\.|пер\.|д\.)[^<\n]{0,50}");
+        public static Regex adress = new Regex(@"[^>\n]{0,50}(улица|ул\.|проспект|просп\.|переулок|пер\.|д\.)[^<\n]{0,50}");
 
         public static HashSet<string> SiteSearching(string site)
         {
