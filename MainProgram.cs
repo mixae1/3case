@@ -23,26 +23,54 @@ namespace SocNetParser
         }
 
 
+
+        public static bool AppAdress(string adress, string[] streets)
+        {
+            foreach (var x in streets)
+                if (adress.Contains(x)) return true;
+            return false;
+
+        }
+
+
+
+
         static void  Main()
         {
-
             
-              System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-              sw.Start();
-              var t = Companies.GetCompanies();
-              sw.Stop();
+            var t =(File.ReadAllLines("CentralStreets.txt"));
+           
 
-              Console.WriteLine(sw.ElapsedMilliseconds);
-             Companies.PrintCompanyInfo(t);
-             Console.WriteLine(t[0].phones[0]);
+            var cafees = new BusinessPage(SitesData.RND_COMPS_URL + "kafe");
+            if (cafees.webName == null)
+                Console.WriteLine("blyat");
+            else
+            {
+                Companies.GetCompanies(cafees, x => AppAdress(x, t));
+                var temp = cafees.comps;
+                Companies.PrintCompanyInfo(temp);
+            }
 
-             
 
-             /*
-            var comps =SiteParser.phone.Matches(File.ReadAllText("buf.txt"));
-            foreach(Match x in comps)
-            Console.WriteLine(x.Value);
-            */
+              //Console.WriteLine(sw.ElapsedMilliseconds);
+            // Companies.PrintCompanyInfo(t);
+            // Console.WriteLine(t[0].phones[0]);
+
+
+            //  var t = Companies.GetCompanies();
+         /*   
+            WebClient webclient = new WebClient();
+
+            webclient.DownloadFile(SitesData.RND_COMPS_URL + "kafe", "buf1.txt");
+            webclient.DownloadFile(SitesData.RND_COMPS_URL + "kafe/page-2/", "buf2.txt");
+
+
+
+            /*
+           var comps =SiteParser.phone.Matches(File.ReadAllText("buf.txt"));
+           foreach(Match x in comps)
+           Console.WriteLine(x.Value);
+           */
             /*
            HttpClient h = new HttpClient();
            HttpResponseMessage t = await h.GetAsync("https://rostov-na-donu.bizly.ru/remont-akpp/");
