@@ -21,6 +21,11 @@ namespace SocNetParser
 
         public class ParserParams
         {
+            public ParserParams(string domain/*, ulong count*/)
+            {
+                Domain = domain;
+                //Count = count;
+            }
             public string? Domain;
             public ulong Count;
         }

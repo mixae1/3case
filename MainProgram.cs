@@ -12,6 +12,9 @@ namespace SocNetParser
         static void Main(string[] args)
         {
 
+            VKParser vk = new VKParser();
+            Console.WriteLine(vk.GetCountOfPosts(new VKParser.ParserParams("reddit")));
+
             /*
             System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
             sw.Start();
