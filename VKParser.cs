@@ -27,13 +27,21 @@ namespace SocNetParser
 
         public ulong GetCountOfPosts(ParserParams @params)
         {
-            WallGetObject wall = vkApi.Wall.Get(
-                new WallGetParams
-                {
-                    Domain = @params.Domain,
-                    Count = @params.Count
-                });
-            return wall.TotalCount;
+            try
+            {
+                WallGetObject wall = vkApi.Wall.Get(
+                    new WallGetParams
+                    {
+                        Domain = @params.Domain,
+                        Count = @params.Count
+                    });
+                return wall.TotalCount;
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return 0;
         }
 
         public class Body
@@ -55,22 +63,35 @@ namespace SocNetParser
 
         public List<Body> GetPosts(ParserParams @params)
         {
-            WallGetObject wall = vkApi.Wall.Get(
-                new WallGetParams{
-                    Domain = @params.Domain,
-                    Count = @params.Count 
-                });
+            List<Body> posts = new List<Body>();
+            try
+            {
+                for (ulong i = 0; i < @params.Count; i += 100)
+                {
 
-            return new List<Body>(
-                wall.WallPosts.Select(x=> 
-                new Body(
-                    x.Reposts.Count, 
-                    x.Likes.Count, 
-                    x.Views.Count, 
-                    x.Comments.Count, 
-                    x.Date.Value
-                    )));
+                    WallGetObject wall = vkApi.Wall.Get(
+                        new WallGetParams
+                        {
+                            Domain = @params.Domain,
+                            Count = Math.Min(@params.Count - i, 100),
+                            Offset = i
+                        });
+                    posts.AddRange(wall.WallPosts.Select(x =>
+                        new Body(
+                            x.Reposts.Count,
+                            x.Likes.Count,
+                            x.Views.Count,
+                            x.Comments.Count,
+                            x.Date.Value
+                            )));
+                }
 
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return posts;
         }
     }
 }
