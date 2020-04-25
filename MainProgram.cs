@@ -11,16 +11,7 @@ namespace SocNetParser
     {
         static void Main(string[] args)
         {
-            var api = new VkApi();
 
-            api.Authorize(new ApiAuthParams
-            {
-                AccessToken = "57d74dc9352faddcb137652ed6c3a1d7c51a28c9bfb02d5c56bbf03bb4fd3eae59cbd49c7c8dbd980b28c"
-            });
-            Console.WriteLine(api.Token);
-            var res = api.Stats.Get(new StatsGetParams({ GroupId = 1 }));
-
-            Console.WriteLine(res.Count);
             /*
             System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
             sw.Start();
