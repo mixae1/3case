@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Net;
@@ -33,11 +33,13 @@ namespace SocNetParser
         }
 
 
-
+        
 
         static void  Main()
         {
-            
+            VKParser vk = new VKParser();
+            Console.WriteLine(vk.GetCountOfPosts(new VKParser.ParserParams("reddit")));
+          
             var t =(File.ReadAllLines("CentralStreets.txt"));
            
 

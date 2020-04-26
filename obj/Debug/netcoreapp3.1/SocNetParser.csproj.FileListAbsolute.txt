@@ -11,3 +11,15 @@ C:\Users\Mixael\Source\Repos\mixae1\3case\obj\Debug\netcoreapp3.1\SocNetParser.A
 C:\Users\Mixael\Source\Repos\mixae1\3case\obj\Debug\netcoreapp3.1\SocNetParser.dll
 C:\Users\Mixael\Source\Repos\mixae1\3case\obj\Debug\netcoreapp3.1\SocNetParser.pdb
 C:\Users\Mixael\Source\Repos\mixae1\3case\obj\Debug\netcoreapp3.1\SocNetParser.genruntimeconfig.cache
+C:\Users\Mixael\Source\Repos\mixae1\3case\bin\Debug\netcoreapp3.1\Flurl.dll
+C:\Users\Mixael\Source\Repos\mixae1\3case\bin\Debug\netcoreapp3.1\Flurl.Http.dll
+C:\Users\Mixael\Source\Repos\mixae1\3case\bin\Debug\netcoreapp3.1\HtmlAgilityPack.dll
+C:\Users\Mixael\Source\Repos\mixae1\3case\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\Mixael\Source\Repos\mixae1\3case\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\Mixael\Source\Repos\mixae1\3case\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\Mixael\Source\Repos\mixae1\3case\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Users\Mixael\Source\Repos\mixae1\3case\bin\Debug\netcoreapp3.1\System.Xml.XPath.XmlDocument.dll
+C:\Users\Mixael\Source\Repos\mixae1\3case\bin\Debug\netcoreapp3.1\VkNet.dll
+C:\Users\Mixael\Source\Repos\mixae1\3case\obj\Debug\netcoreapp3.1\SocNetParser.csproj.CopyComplete
+C:\Users\Mixael\Source\Repos\mixae1\3case\obj\Debug\netcoreapp3.1\SocNetParser.Properties.Resources.resources
+C:\Users\Mixael\Source\Repos\mixae1\3case\obj\Debug\netcoreapp3.1\SocNetParser.csproj.GenerateResource.cache

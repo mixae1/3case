@@ -42,6 +42,12 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
+          "dependencies": {
+            "VkNet": {
+              "target": "Package",
+              "version": "[1.51.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
