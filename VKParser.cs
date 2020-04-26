@@ -15,7 +15,7 @@ namespace SocNetParser
             vkApi = new VkApi();
             vkApi.Authorize(new ApiAuthParams
             {
-                AccessToken = "70aed950fe8f6d4f096d08edaf28051f79635495c92f9dea5d771dff3348744167581215fc252ac804748"
+                AccessToken = Properties.Resources.VKtoken
             });
         }
 
