@@ -7,11 +7,10 @@ using System.Linq;
 using System.Threading;
 namespace SocNetParser
 {
-    //вынести в отдельный файл
     class Companies
     {
 
-        //  public const string RND_COMPS_URL = "https://rostov-na-donu.bizly.ru/remont-akpp/";
+        //public const string RND_COMPS_URL = "https://rostov-na-donu.bizly.ru/remont-akpp/";
         public static string test = "https://rostov-na-donu.bizly.ru/remont-akpp/page-2/";
 
 

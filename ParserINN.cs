@@ -5,11 +5,10 @@ using System.Text.RegularExpressions;
 using System.IO;
 
 namespace SocNetParser
-{
-    //пусть пока будет интернал ,потом разберемся ,наверное вообще статичным сделаем 
-    class ParserINN
+{ 
+    static class ParserINN
     {   /// <summary>
-        /// ссылка для запроса к сайту ,где инн берем
+        /// ссылка для запроса к сайту ,где берем инн
         /// </summary>
         const string LISTORG_URL = "https://www.list-org.com/search?type=address&val=";
         /// <summary>
@@ -31,9 +30,6 @@ namespace SocNetParser
         /// <summary>
         /// получаем ИНН
         /// </summary>
-        /// <param name="orgName"></param>
-        /// <param name="orgAdress"></param>
-        /// <returns></returns>
         public static string GetINNofOrg(string orgName, string orgAdress)
         {
             string path = GetСorrectAdress(orgAdress);
@@ -72,7 +68,7 @@ namespace SocNetParser
         }
 
         /// <summary>
-        /// метод чисто для проверки ,потом его удалить 
+        /// вывод информации о компаниях
         /// </summary>
         /// <param name="lst"></param>
         public static void PrintCompanyInfo(List<Company> lst)

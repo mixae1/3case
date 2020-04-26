@@ -24,10 +24,10 @@ namespace SocNetParser
         /// основной конструктор
         /// </summary>
         /// <param name="nm">имя организации </param>
-        /// <param name="adrs">адреса оргн-ии </param>
-        /// <param name="hs">элект-ые почты </param>
-        /// <param name="web">сайт орг-ции</param>
-        /// <param name="phn"> теле-ны огр-ии</param>
+        /// <param name="adrs">адреса организации </param>
+        /// <param name="hs">электронные почты организации</param>
+        /// <param name="web">сайт организации</param>
+        /// <param name="phn"> телефоны организации</param>
         public Company(string nm, HashSet<string> adrs, HashSet<string> hs, string web, List<string> phn)
         {
             adress = adrs;

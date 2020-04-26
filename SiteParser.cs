@@ -6,19 +6,17 @@ using System.Text;
 using System.Linq;
 namespace SocNetParser
 {
-
-    //office@autora-rus.ru - доработать регулярку по почтам + 
     //Россия, Ростов-на-Дону, Депутатская улица, 5а - дорабоать регулярку по адресам +
 
-    class SiteParser
+    static class SiteParser
     {
         static Regex face = new Regex(@"facebook\.com\/\w+");
         static Regex inst = new Regex(@"instagram\.com\/\w+");
         static Regex vk = new Regex(@"vk\.com\/\w+");
-        public static Regex mail = new Regex(@"\w[\w\d_\-]{0,15}\@[\w\-]{4,9}\.\w{1,3}");
+        public static Regex mail = new Regex(@"\w[\w\d_\-]{0,15}\@[\w\-]{2,15}\.\w{1,3}");
         public static Regex phone = new Regex(@"\D(?<num>\+?[78]\ ?\(?\d{3}\)?\ ?\d{3}([ \-]?)\d{2}\1\d{2})\D");
         public static Regex adress = new Regex(@"[^>\n]{0,50}(улица|ул\.|проспект|просп\.|переулок|пер\.|д\.)[^<\n]{0,50}");
-        public static Regex websites = new Regex(@"\D?http[s]?:\/\/([а-яА-Яa-zA-Z0-9]\.?[-]?)+\.\w{1,4}\D?");
+        public static Regex websites = new Regex(@"\D?https?:\/\/([а-яА-Яa-zA-Z0-9]\.?\-?)+\.\w{1,4}\D?");
 
         public static HashSet<string> SiteSearching(string site)
         {
@@ -27,6 +25,8 @@ namespace SocNetParser
 
             WebClient webclient = new WebClient();
             webclient.Headers.Add(HttpRequestHeader.UserAgent, "");
+            
+            //Разные варианты загрузки html страницы
             //1
             var buf = webclient.DownloadString(site);
 
@@ -68,18 +68,6 @@ namespace SocNetParser
             int s = int.Parse(tmp.First().Value);
 
             return f / s + f % s == 0 ? 0 : 1;
-
-
         }
-
-
-        /*
-        static void Main(string[] args)
-        {
-
-            var hs = SiteSearching("https://atlant-don.ru/");
-            foreach (var s in hs) Console.WriteLine(s);
-        }
-        */
     }
 }
