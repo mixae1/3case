@@ -11,7 +11,7 @@ namespace SocNetParser
     class Companies
     {
 
-      //  public const string RND_COMPS_URL = "https://rostov-na-donu.bizly.ru/remont-akpp/";
+        //  public const string RND_COMPS_URL = "https://rostov-na-donu.bizly.ru/remont-akpp/";
         public static string test = "https://rostov-na-donu.bizly.ru/remont-akpp/page-2/";
 
 
@@ -34,7 +34,7 @@ namespace SocNetParser
             string page = "page-";
             // int index = 1;
             var lst = new List<Company>();
-            
+
             // var comps = RND_reg.Matches(File.ReadAllText("buf1.txt"));
             for (int i = 1; i < 3; i++)
             {
@@ -42,7 +42,7 @@ namespace SocNetParser
                 WebRequest wr = WebRequest.Create(sourse);
                 WebResponse wren = wr.GetResponse();
                 var temp = new StreamReader(wren.GetResponseStream());
-                 var comps = RND_reg.Matches(temp.ReadToEnd());
+                var comps = RND_reg.Matches(temp.ReadToEnd());
 
 
                 foreach (Match x in comps)//16мс в 1 раз 
@@ -119,11 +119,8 @@ namespace SocNetParser
                 Console.WriteLine("//////////");
             }
         }
-
-      
-
-    }       
-} 
+    }
+}
        
 
  

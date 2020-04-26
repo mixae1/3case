@@ -42,7 +42,7 @@ namespace SocNetParser
                     });
                 return wall.TotalCount;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
@@ -92,7 +92,7 @@ namespace SocNetParser
                 }
 
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }

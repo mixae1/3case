@@ -117,6 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="RND_COMPS_URL" xml:space="preserve">
+    <value>https://rostov-na-donu.bizly.ru/</value>
+    <comment>ссылка на сайт Ростова</comment>
+  </data>
   <data name="VKtoken" xml:space="preserve">
     <value>70aed950fe8f6d4f096d08edaf28051f79635495c92f9dea5d771dff3348744167581215fc252ac804748</value>
   </data>

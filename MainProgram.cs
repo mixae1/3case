@@ -10,15 +10,15 @@ using System.Threading.Tasks;
 namespace SocNetParser
 {
     class MainProgram
-    {  
+    {
 
-        static  async void GetData()
+        static async void GetData()
         {
-              HttpClient h = new HttpClient();
+            HttpClient h = new HttpClient();
             HttpResponseMessage t = await h.GetAsync("https://rostov-na-donu.bizly.ru/avtoatele/");
             string inp = await t.Content.ReadAsStringAsync();
-          // var temp=Companies.websites.Matches(inp);
-         //   foreach(var x in  temp)
+            // var temp=Companies.websites.Matches(inp);
+            //   foreach(var x in  temp)
             Console.WriteLine(inp);
         }
 
@@ -33,17 +33,17 @@ namespace SocNetParser
         }
 
 
-        
 
-        static void  Main()
+
+        static void Main()
         {
             VKParser vk = new VKParser();
             Console.WriteLine(vk.GetCountOfPosts(new VKParser.ParserParams("reddit")));
-          
-            var t =(File.ReadAllLines("CentralStreets.txt"));
-           
 
-            var cafees = new BusinessPage(SitesData.RND_COMPS_URL + "kafe");
+            var t = (File.ReadAllLines("CentralStreets.txt"));
+
+
+            var cafees = new BusinessPage(Properties.Resources.RND_COMPS_URL + "kafe");
             if (cafees.webName == null)
                 Console.WriteLine("blyat");
             else
@@ -54,25 +54,25 @@ namespace SocNetParser
             }
 
 
-              //Console.WriteLine(sw.ElapsedMilliseconds);
+            //Console.WriteLine(sw.ElapsedMilliseconds);
             // Companies.PrintCompanyInfo(t);
             // Console.WriteLine(t[0].phones[0]);
 
 
             //  var t = Companies.GetCompanies();
-         /*   
-            WebClient webclient = new WebClient();
+            /*   
+               WebClient webclient = new WebClient();
 
-            webclient.DownloadFile(SitesData.RND_COMPS_URL + "kafe", "buf1.txt");
-            webclient.DownloadFile(SitesData.RND_COMPS_URL + "kafe/page-2/", "buf2.txt");
+               webclient.DownloadFile(SitesData.RND_COMPS_URL + "kafe", "buf1.txt");
+               webclient.DownloadFile(SitesData.RND_COMPS_URL + "kafe/page-2/", "buf2.txt");
 
 
 
-            /*
-           var comps =SiteParser.phone.Matches(File.ReadAllText("buf.txt"));
-           foreach(Match x in comps)
-           Console.WriteLine(x.Value);
-           */
+               /*
+              var comps =SiteParser.phone.Matches(File.ReadAllText("buf.txt"));
+              foreach(Match x in comps)
+              Console.WriteLine(x.Value);
+              */
             /*
            HttpClient h = new HttpClient();
            HttpResponseMessage t = await h.GetAsync("https://rostov-na-donu.bizly.ru/remont-akpp/");
@@ -101,6 +101,4 @@ namespace SocNetParser
               */
         }
     }
-
-
 }

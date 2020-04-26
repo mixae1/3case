@@ -28,7 +28,7 @@ namespace SocNetParser
         /// <param name="hs">элект-ые почты </param>
         /// <param name="web">сайт орг-ции</param>
         /// <param name="phn"> теле-ны огр-ии</param>
-        public Company(string nm, HashSet<string> adrs, HashSet<string> hs,string web,List<string> phn)
+        public Company(string nm, HashSet<string> adrs, HashSet<string> hs, string web, List<string> phn)
         {
             adress = adrs;
             emails = hs;
@@ -42,8 +42,6 @@ namespace SocNetParser
             this.adress = adress;
             emails = hs;
             this.name = name;
-          
         }
-
     }
 }

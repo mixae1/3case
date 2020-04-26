@@ -29,11 +29,11 @@ namespace SocNetParser
             webclient.Headers.Add(HttpRequestHeader.UserAgent, "");
             //1
             var buf = webclient.DownloadString(site);
-            
+
             //2
             //var data = webclient.DownloadData(site);
             //string buf = Encoding.UTF8.GetString(data);
-            
+
             //3
             //web.DownloadFile(site, "buf.txt");
             //var buf = File.ReadAllText("buf.txt");
@@ -64,12 +64,12 @@ namespace SocNetParser
             Regex p = new Regex(@"<p>[\s\S]+?<\/p>");
             Regex values = new Regex(@"\d+");
             var tmp = values.Matches(p.Match(streamtext).Value);
-            int f =int.Parse(tmp.First().Value);
+            int f = int.Parse(tmp.First().Value);
             int s = int.Parse(tmp.First().Value);
-          
-           return f/s+ f%s == 0 ? 0 : 1;
 
-                
+            return f / s + f % s == 0 ? 0 : 1;
+
+
         }
 
 

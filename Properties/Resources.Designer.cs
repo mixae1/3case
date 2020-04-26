@@ -61,6 +61,15 @@ namespace SocNetParser.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на https://rostov-na-donu.bizly.ru/.
+        /// </summary>
+        internal static string RND_COMPS_URL {
+            get {
+                return ResourceManager.GetString("RND_COMPS_URL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на 70aed950fe8f6d4f096d08edaf28051f79635495c92f9dea5d771dff3348744167581215fc252ac804748.
         /// </summary>
         internal static string VKtoken {
