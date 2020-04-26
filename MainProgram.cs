@@ -12,35 +12,16 @@ namespace SocNetParser
     class MainProgram
     {
 
-        static async void GetData()
-        {
-            HttpClient h = new HttpClient();
-            HttpResponseMessage t = await h.GetAsync("https://rostov-na-donu.bizly.ru/avtoatele/");
-            string inp = await t.Content.ReadAsStringAsync();
-            // var temp=Companies.websites.Matches(inp);
-            //   foreach(var x in  temp)
-            Console.WriteLine(inp);
-        }
-
-
-
-        public static bool AppAdress(string adress, string[] streets)
-        {
-            foreach (var x in streets)
-                if (adress.Contains(x)) return true;
-            return false;
-
-        }
-
-
+      
 
 
         static void Main()
         {
-            VKParser vk = new VKParser();
-            Console.WriteLine(vk.GetCountOfPosts(new VKParser.ParserParams("reddit")));
-
-            var t = (File.ReadAllLines("CentralStreets.txt"));
+           
+           // VKParser vk = new VKParser();
+          //  Console.WriteLine(vk.GetCountOfPosts(new VKParser.ParserParams("reddit"))); //2,7 c
+           
+            var t = (File.ReadAllLines("../../../CentralStreets.txt"));
 
 
             var cafees = new BusinessPage(Properties.Resources.RND_COMPS_URL + "kafe");
@@ -48,7 +29,7 @@ namespace SocNetParser
                 Console.WriteLine("blyat");
             else
             {
-                Companies.GetCompanies(cafees, x => AppAdress(x, t));
+                Companies.FullFillCompanies(cafees, x =>Companies.AppAdress(x, t));
                 var temp = cafees.comps;
                 Companies.PrintCompanyInfo(temp);
             }

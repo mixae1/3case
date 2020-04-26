@@ -14,7 +14,6 @@ namespace SocNetParser
 
         public string webName { get; }
         public int totalPages { get; set; }
-        public int pagestoParse { get; set; }
         public List<Company> comps { get; set; }
 
         public BusinessPage(string webname)

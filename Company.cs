@@ -20,6 +20,12 @@ namespace SocNetParser
 
         public List<string> phones { get; set; }
 
+        public string vk { get; set; }
+        public string face { get; set; }
+        
+        public string inst { get; set; }
+
+
         /// <summary>
         /// основной конструктор
         /// </summary>
@@ -28,13 +34,16 @@ namespace SocNetParser
         /// <param name="hs">электронные почты организации</param>
         /// <param name="web">сайт организации</param>
         /// <param name="phn"> телефоны организации</param>
-        public Company(string nm, HashSet<string> adrs, HashSet<string> hs, string web, List<string> phn)
+        public Company(string nm, HashSet<string> adrs, HashSet<string> hs, string web, List<string> phn,string VK,string Face,string Inst)
         {
             adress = adrs;
             emails = hs;
             name = nm;
             website = web;
             phones = phn;
+            vk = VK;
+            face = Face;
+
         }
 
         public Company(string name, HashSet<string> adress, HashSet<string> hs)
