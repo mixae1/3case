@@ -15,7 +15,7 @@ namespace SocNetParser
         /// <summary>
         /// ссылка для запроса к основному сайту (пока ведет к авто тематике)
         /// </summary>
-        public const string RND_COMPS_URL = "https://rostov-na-donu.jsprav.ru/avtosalonyi/";
+      
 
 
         //подготовка адреса сайта к запросу
@@ -84,6 +84,7 @@ namespace SocNetParser
                     Console.WriteLine(tmp);
                 foreach (var tmp in temp.emails)
                     Console.WriteLine(tmp);
+                Console.WriteLine(temp.website);
                 Console.WriteLine("//////////");
             }
         }
