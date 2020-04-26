@@ -9,13 +9,14 @@ using System.Threading.Tasks;
 
 namespace SocNetParser
 {
-    class MainProgram
+
+    partial class MainProgram
     {
 
         static async void GetData()
         {
             HttpClient h = new HttpClient();
-            HttpResponseMessage t = await h.GetAsync("https://rostov-na-donu.bizly.ru/avtoatele/");
+            HttpResponseMessage t = await h.GetAsync("https://atlant-don.ru/");
             string inp = await t.Content.ReadAsStringAsync();
             // var temp=Companies.websites.Matches(inp);
             //   foreach(var x in  temp)
@@ -35,24 +36,23 @@ namespace SocNetParser
 
 
 
+        public static VKParser vkApi = new VKParser();
+
         static void Main()
         {
-            VKParser vk = new VKParser();
-            Console.WriteLine(vk.GetCountOfPosts(new VKParser.ParserParams("reddit")));
 
+            /*
             var t = (File.ReadAllLines("CentralStreets.txt"));
-
-
             var cafees = new BusinessPage(Properties.Resources.RND_COMPS_URL + "kafe");
             if (cafees.webName == null)
-                Console.WriteLine("blyat");
+                Console.WriteLine("cafees.webName == null");
             else
             {
                 Companies.GetCompanies(cafees, x => AppAdress(x, t));
                 var temp = cafees.comps;
                 Companies.PrintCompanyInfo(temp);
             }
-
+            */
 
             //Console.WriteLine(sw.ElapsedMilliseconds);
             // Companies.PrintCompanyInfo(t);
