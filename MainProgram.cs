@@ -40,65 +40,20 @@ namespace SocNetParser
 
         static void Main()
         {
+            var reddit = new VKGroup("-188523184");
+            Console.WriteLine("exist = " + reddit.exist);
+            
+            Console.WriteLine("tPosts = " + reddit.totalPosts);
 
-            /*
-            var t = (File.ReadAllLines("CentralStreets.txt"));
-            var cafees = new BusinessPage(Properties.Resources.RND_COMPS_URL + "kafe");
-            if (cafees.webName == null)
-                Console.WriteLine("cafees.webName == null");
-            else
-            {
-                Companies.GetCompanies(cafees, x => AppAdress(x, t));
-                var temp = cafees.comps;
-                Companies.PrintCompanyInfo(temp);
-            }
-            */
+            reddit.LoadPosts(10);
 
-            //Console.WriteLine(sw.ElapsedMilliseconds);
-            // Companies.PrintCompanyInfo(t);
-            // Console.WriteLine(t[0].phones[0]);
+            Console.WriteLine("count = " + reddit.posts.Count);
 
+            reddit.LoadNewPosts(2);
 
-            //  var t = Companies.GetCompanies();
-            /*   
-               WebClient webclient = new WebClient();
+            reddit.LoadNewPosts();
 
-               webclient.DownloadFile(SitesData.RND_COMPS_URL + "kafe", "buf1.txt");
-               webclient.DownloadFile(SitesData.RND_COMPS_URL + "kafe/page-2/", "buf2.txt");
-
-
-
-               /*
-              var comps =SiteParser.phone.Matches(File.ReadAllText("buf.txt"));
-              foreach(Match x in comps)
-              Console.WriteLine(x.Value);
-              */
-            /*
-           HttpClient h = new HttpClient();
-           HttpResponseMessage t = await h.GetAsync("https://rostov-na-donu.bizly.ru/remont-akpp/");
-           string inp = await t.Content.ReadAsStringAsync();
-           var temp = SiteParser.phone.Matches(inp);
-             foreach(var x in  temp)
-           Console.WriteLine(x.ToString());
-
-
-           WebClient webclient = new WebClient();
-
-           webclient.DownloadFile(Companies.test, "buf.txt");
-           var buf = File.ReadAllText("buf.txt");
-           Console.WriteLine(buf);
-           */
-
-            /*sy
-              WebRequest webr = (HttpWebRequest)WebRequest.Create(Companies.RND_COMPS_URL);
-              WebResponse webresp = (HttpWebResponse)webr.GetResponse();
-              var t = webresp.GetResponseStream();
-              var temp = new StreamReader(t);
-              Console.WriteLine(temp.ReadToEnd());
-           //   var tempp = Companies.websites.Matches(temp.ReadToEnd());
-             // foreach (Match s in tempp)
-               //   Console.WriteLine(s.ToString());
-              */
+            reddit.LoadNewPosts();
         }
     }
 }
