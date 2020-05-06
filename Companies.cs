@@ -5,22 +5,24 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using System.Threading;
+using System.Text.Json;
+using VkNet.Exception;
+using System.Net.Http;
+
 namespace SocNetParser
 {
     class Companies
     {
 
-        //public const string RND_COMPS_URL = "https://rostov-na-donu.bizly.ru/remont-akpp/";
         public static string test = "https://rostov-na-donu.bizly.ru/remont-akpp/page-2/";
 
 
         static Regex RND_reg = new Regex(@"<div class=\Dtitle\D>([\s\S]+?)<\/ul>");
         static Regex RND_name = new Regex(@"<a href([\s\S])+?>([\s\S]+?)[<\/a>]");
 
-        // @"<div class=\Dorg\D>([\s\S]+?)<div class=\Dto-top\D>" (2-5) --- РЕГУЛЯРКА К СТАРОМУ САЙТУ ПОКА ПРОШУ НЕ ТРОГАТЬ
 
-
-        public static Regex websites = new Regex(@"\D?http[s]?:\/\/([а-яА-Яa-zA-Z0-9]\.?[-]?)+\.\w{1,4}\D?");
+       static WebClient webclient = new WebClient();
+      
 
         /// <summary>
         /// получаем список компаний определенного бизнес сектора 
@@ -66,7 +68,7 @@ namespace SocNetParser
 
 
                     string webs;
-                    var web = websites.Matches(x.Value);
+                    var web = SiteParser.websites.Matches(x.Value);
                     if (web.Count == 1) webs = null;
                     else
                         webs = web.Last().Value.Trim();
@@ -90,6 +92,96 @@ namespace SocNetParser
             bs.comps = lst;
         }
 
+        /// <summary>
+        /// получаем список компаний с json файла
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static List<Company> GetCompaniesJson(string path) 
+        { 
+            return JsonSerializer.Deserialize<List<Company>>(File.ReadAllText(path));
+        }
+
+
+        public static void AddCompanyInfo(List<Company> lst)
+        {
+            int counter = 0;
+            foreach (var tmp in lst)
+            {    counter++;
+                if (string.IsNullOrEmpty(tmp.website)) continue;
+                AddInfo(tmp);
+                Console.WriteLine($"{counter} company from 25 was fullfilled");
+               
+            }
+        }
+
+        static void AddInfo(Company comp)
+        {
+            
+            string ur = "http://";
+
+            string s;
+
+            try
+            {
+                s = webclient.DownloadString(ur + comp.website);
+            }
+            catch
+            {
+                return;
+            }
+
+         //   if (s == null) return;
+
+            var phns = SiteParser.phone.Matches(s);
+            if (comp.phones == null) comp.phones = new List<string>(); 
+            foreach(var x in phns)
+            {
+                comp.phones.Add(x.ToString());
+            }
+
+            var ems = SiteParser.mail.Matches(s);
+            if (comp.emails == null) comp.emails = new HashSet<string>();
+            foreach (var x in ems)
+            {
+                comp.emails.Add(x.ToString());
+            }
+
+            var vk = SiteParser.vk.Match(s);
+            if (vk.Success)
+            {
+                if ((comp.vk == null) || (comp.vk != null)
+                && (!comp.vk.Contains(vk.Value) || !vk.Value.Contains(comp.vk)))
+                    comp.vk = vk.Value;
+            }
+
+            var face = SiteParser.face.Match(s);
+            if (face.Success)
+            {
+                if ((comp.face == null) || (comp.face != null)
+                    && (!comp.face.Contains(vk.Value) || !face.Value.Contains(comp.face)))
+                    comp.face = face.Value;
+            }
+
+            var inst = SiteParser.inst.Match(s);
+            if (inst.Success)
+            {
+                if ((comp.inst == null) || (comp.inst != null) 
+                    && (!comp.inst.Contains(inst.Value) || !inst.Value.Contains(comp.inst)))
+                    comp.inst = inst.Value;
+            }
+
+            var adrs = SiteParser.adress.Matches(s);
+            if (comp.adress == null) comp.adress = new HashSet<string>();
+            foreach (var x in adrs)
+            {
+                comp.adress.Add(x.ToString());
+            }
+
+
+        }
+
+
 
 
 
@@ -103,16 +195,25 @@ namespace SocNetParser
             {
                 Console.WriteLine(temp.name);
 
-                foreach (var tmp in temp.adress)
-                    Console.WriteLine(tmp);
+                if (temp.adress == null) Console.WriteLine("no adress");
+                else 
 
-                foreach (var tmp in temp.emails)
-                    Console.WriteLine(tmp);
+                 foreach (var tmp in temp.adress)
+                  Console.WriteLine(tmp);
 
-                if (temp.phones.Count > 0)
-                    Console.WriteLine(temp.phones[0]);
+
+                if (temp.emails == null) Console.WriteLine("no phones"); 
+                else 
+               foreach (var tmp in temp.emails)
+                   Console.WriteLine(tmp);
+
+               if (temp.phones.Count > 0)
+                 Console.WriteLine(temp.phones[0]);
 
                 Console.WriteLine(temp.website);
+                Console.WriteLine(temp.face);
+                Console.WriteLine(temp.vk);
+                Console.WriteLine(temp.inst);
 
 
                 Console.WriteLine("//////////");

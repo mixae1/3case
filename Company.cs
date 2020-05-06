@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-
+using System.Text.Json.Serialization;
 namespace SocNetParser
 {
     /// <summary>
@@ -7,18 +7,33 @@ namespace SocNetParser
     /// </summary>
 
     class Company
-    {
-        public string name { get; set; }
-        //  string inn { get; set; }
+    {  
+        //АТТРИБУТЫ ЛУЧШЕ ОСТАВИТЬ ,ХРЕН ЕГО ЗНАЕТ КАК ОНИ БУДУТ В ДЖСОН ФАЙЛЕ НАЗВАНЫ ,ЗДЕСЬ ИХ ИЗМЕНИТЬ БЫСТРЕЕ БУДЕТ
 
+        public string name { get; set; }
+         
+        [JsonPropertyName("adress")]
         //список физических или юридических адресов
         public HashSet<string> adress { get; set; }
 
+
+        [JsonIgnore]
         public HashSet<string> emails { get; set; }
+
+        [JsonPropertyName("web")]
         //ссылка на сайт компании
         public string website { get; set; }
 
+         [JsonIgnore]
         public List<string> phones { get; set; }
+
+
+        public string vk { get; set; } = "";
+
+        public string inst { get; set; } = "";
+
+        public string face { get; set; } = "";
+
 
         /// <summary>
         /// основной конструктор
@@ -28,7 +43,7 @@ namespace SocNetParser
         /// <param name="hs">электронные почты организации</param>
         /// <param name="web">сайт организации</param>
         /// <param name="phn"> телефоны организации</param>
-        public Company(string nm, HashSet<string> adrs, HashSet<string> hs, string web, List<string> phn)
+        public Company(string nm, HashSet<string> adrs, HashSet<string> hs=null, string web=null, List<string> phn=null)
         {
             adress = adrs;
             emails = hs;
@@ -37,11 +52,18 @@ namespace SocNetParser
             phones = phn;
         }
 
-        public Company(string name, HashSet<string> adress, HashSet<string> hs)
+        //нужно для сериализации данных с json файла 
+        //на случай если парсер яндекса останется на питухоне
+       
+        public Company()
         {
-            this.adress = adress;
-            emails = hs;
-            this.name = name;
+            vk = "";
+            inst = "";
+            face = "";
+            phones = new List<string>();
+            emails = new HashSet<string>();
+            adress = new HashSet<string>();
         }
+        
     }
 }
