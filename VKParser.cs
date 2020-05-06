@@ -28,7 +28,7 @@ namespace SocNetParser
                 Domain = domain;
                 Count = count;
             }
-            public string? Domain;
+            public string Domain;
             public ulong Count;
         }
 

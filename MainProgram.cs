@@ -7,11 +7,14 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Net.Http.Headers;
+using VkNet;
 
 namespace SocNetParser
 {
     class MainProgram
     {
+
+        public static VKParser vkApi = new VKParser();
         static void Main()
         {
             //òåñò 
