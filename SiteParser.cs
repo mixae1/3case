@@ -1,8 +1,8 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using System.IO;
 using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using System.Linq;
 namespace SocNetParser
 {
@@ -17,6 +17,11 @@ namespace SocNetParser
         public static Regex phone = new Regex(@"\D(?<num>\+?[78]\ ?\(?\d{3}\)?\ ?\d{3}([ \-]?)\d{2}\1\d{2})\D");
         public static Regex adress = new Regex(@"[^>\n]{0,50}(улица|ул\.|проспект|просп\.|переулок|пер\.|д\.)[^<\n]{0,50}");
         public static Regex websites = new Regex(@"\D?https?:\/\/([а-яА-Яa-zA-Z0-9]\.?\-?)+\.\w{1,4}\D?");
+
+        partial class SiteInfo
+        {
+
+        }
 
         public static HashSet<string> SiteSearching(string site)
         {
@@ -38,9 +43,8 @@ namespace SocNetParser
             //web.DownloadFile(site, "buf.txt");
             //var buf = File.ReadAllText("buf.txt");
 
-
             HashSet<string> hs = new HashSet<string>();
-
+            
             var result = face.Match(buf);
             hs.Add(result.Value.TrimStart());
             result = inst.Match(buf);
@@ -54,6 +58,7 @@ namespace SocNetParser
             foreach (Match s in results) hs.Add(s.Groups["num"].ToString().TrimStart());
             results = adress.Matches(buf);
             foreach (var s in results) hs.Add(s.ToString().TrimStart());
+            
 
             return hs; //надо почистить от пустых строк
         }

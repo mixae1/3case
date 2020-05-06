@@ -12,19 +12,12 @@ namespace SocNetParser
 {
     class MainProgram
     {
-
-
-
         static void Main()
         {
-            //òåñò 
+            //Ã²Ã¥Ã±Ã² 
             var t=Companies.GetCompaniesJson("../../../Data.json");
             Companies.AddCompanyInfo(t);
-             Companies.PrintCompanyInfo(t);
-          
-
-            
-
+             Companies.PrintCompanyInfo(t);     
         }
     }
 }
