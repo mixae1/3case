@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 namespace SocNetParser
 {
@@ -27,8 +29,12 @@ namespace SocNetParser
          [JsonIgnore]
         public List<string> phones { get; set; }
 
+        public DateTime? lastVkPost { get; set; }
 
-        public string vk { get; set; } = "";
+        private string vk;
+
+        [JsonPropertyName("vk")]
+        public string Vk { get { return vk?.Substring(vk.IndexOf('/')+1); } set { vk = value; } }
 
         public string inst { get; set; } = "";
 
@@ -57,7 +63,7 @@ namespace SocNetParser
        
         public Company()
         {
-            vk = "";
+           
             inst = "";
             face = "";
             phones = new List<string>();

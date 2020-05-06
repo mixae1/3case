@@ -8,6 +8,8 @@ using System.Threading;
 using System.Text.Json;
 using VkNet.Exception;
 using System.Net.Http;
+using HtmlAgilityPack;
+using System.Threading.Tasks;
 
 namespace SocNetParser
 {
@@ -17,80 +19,8 @@ namespace SocNetParser
         public static string test = "https://rostov-na-donu.bizly.ru/remont-akpp/page-2/";
 
 
-        static Regex RND_reg = new Regex(@"<div class=\Dtitle\D>([\s\S]+?)<\/ul>");
-        static Regex RND_name = new Regex(@"<a href([\s\S])+?>([\s\S]+?)[<\/a>]");
-
-
        static WebClient webclient = new WebClient();
       
-
-        /// <summary>
-        /// получаем список компаний определенного бизнес сектора 
-        /// TODO : сделать для любого бизнеса
-        /// </summary>
-        /// <returns></returns>
-        public static void GetCompanies(BusinessPage bs, Predicate<string> pred, int Compsneeds = 1)
-        {//13 мс
-
-            string page = "page-";
-            // int index = 1;
-            var lst = new List<Company>();
-
-            // var comps = RND_reg.Matches(File.ReadAllText("buf1.txt"));
-            for (int i = 1; i < 3; i++)
-            {
-                string sourse = bs.webName + "/" + page + i;
-                WebRequest wr = WebRequest.Create(sourse);
-                WebResponse wren = wr.GetResponse();
-                var temp = new StreamReader(wren.GetResponseStream());
-                var comps = RND_reg.Matches(temp.ReadToEnd());
-
-
-                foreach (Match x in comps)//16мс в 1 раз 
-                {
-                    HashSet<string> ad = new HashSet<string>();
-
-                    var tmp = SiteParser.adress.Matches(x.ToString());//1-2
-                    ad = new HashSet<string>();
-                    foreach (var xx in tmp)
-                        ad.Add(xx.ToString().Trim());
-
-                    if (!pred(ad.First())) continue;
-
-                    var address = ad;
-                    ad = new HashSet<string>();
-                    tmp = SiteParser.mail.Matches(x.Value);//1-2
-
-
-                    foreach (var xx in tmp)
-                        ad.Add(xx.ToString());
-
-
-
-                    string webs;
-                    var web = SiteParser.websites.Matches(x.Value);
-                    if (web.Count == 1) webs = null;
-                    else
-                        webs = web.Last().Value.Trim();
-
-                    List<string> phones = new List<string>();
-                    tmp = SiteParser.phone.Matches(x.Value);
-
-
-                    foreach (Match y in tmp)
-                        phones.Add(y.Value.Trim());
-
-
-                    string name = RND_name.Match(x.Value).Groups[2].Value;//2-3мс
-
-                    lst.Add(new Company(name, address, ad, webs, phones));//3-4 мс
-                }
-
-                Thread.Sleep(1000);// чтоб нами не заинтересовались админы сайта 
-            }
-
-            bs.comps = lst;
-        }
 
         /// <summary>
         /// получаем список компаний с json файла
@@ -108,14 +38,19 @@ namespace SocNetParser
             int counter = 0;
             foreach (var tmp in lst)
             {    counter++;
-                if (string.IsNullOrEmpty(tmp.website)) continue;
+                if (string.IsNullOrEmpty(tmp.website))
+                {
+                    if (tmp.Vk != null)
+                        tmp.lastVkPost = GetLastVkPost(tmp.Vk);
+                    continue;
+                } 
                 AddInfo(tmp);
-                Console.WriteLine($"{counter} company from 25 was fullfilled");
-               
+               Console.WriteLine($"{counter} company from 25 was fullfilled");
+                
             }
         }
 
-        static void AddInfo(Company comp)
+        static  void AddInfo(Company comp)
         {
             
             string ur = "http://";
@@ -131,7 +66,7 @@ namespace SocNetParser
                 return;
             }
 
-         //   if (s == null) return;
+     
 
             var phns = SiteParser.phone.Matches(s);
             if (comp.phones == null) comp.phones = new List<string>(); 
@@ -147,13 +82,17 @@ namespace SocNetParser
                 comp.emails.Add(x.ToString());
             }
 
-            var vk = SiteParser.vk.Match(s);
+            var vk = SiteParser.Vk.Match(s);
             if (vk.Success)
             {
-                if ((comp.vk == null) || (comp.vk != null)
-                && (!comp.vk.Contains(vk.Value) || !vk.Value.Contains(comp.vk)))
-                    comp.vk = vk.Value;
+                if ((comp.Vk == null) || (comp.Vk != null)
+                && (!comp.Vk.Contains(vk.Value) || !vk.Value.Contains(comp.Vk)))
+                    comp.Vk = vk.Value;
             }
+
+            // Task<DateTime> t = new Task<DateTime>(()=>GetLastVkPost(comp.Vk));
+
+           var time= GetLastVkPost(comp.Vk);
 
             var face = SiteParser.face.Match(s);
             if (face.Success)
@@ -177,13 +116,25 @@ namespace SocNetParser
             {
                 comp.adress.Add(x.ToString());
             }
+           
+            if (time.CompareTo(DateTime.MinValue) >0)
+                comp.lastVkPost = time;
+            else
+                comp.lastVkPost = null;
+        }
 
+        
 
+      static  DateTime GetLastVkPost(string domain)
+        {
+            if (domain == null) return DateTime.MinValue;
+            var t = new VKGroup(domain);
+            t.LoadPosts(2);
+            return t.DTofLastTimePostedWithWall();
         }
 
 
-
-
+       
 
         /// <summary>
         /// метод чисто для проверки ,потом его удалить 
@@ -210,9 +161,10 @@ namespace SocNetParser
                if (temp.phones.Count > 0)
                  Console.WriteLine(temp.phones[0]);
 
+                Console.WriteLine(temp.lastVkPost);
                 Console.WriteLine(temp.website);
                 Console.WriteLine(temp.face);
-                Console.WriteLine(temp.vk);
+                Console.WriteLine(temp.Vk);
                 Console.WriteLine(temp.inst);
 
 
