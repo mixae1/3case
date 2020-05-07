@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SocNetParser
 {
@@ -12,7 +13,7 @@ namespace SocNetParser
         {
             try
             {
-                var wallInfo = MainProgram.vkApi.GetWallInfo(new VKParser.ParserParams(domain, 1));
+                var wallInfo = MainProgram.vkApi.GetWallInfo(new VKParser.ParserParams(domain, 2));
                 totalPosts = wallInfo.TotalCount;
                 this.domain = domain;
                 exist = true;
@@ -59,5 +60,12 @@ namespace SocNetParser
             if (posts != null) return posts[0].time;
             else return DateTime.MinValue;
         }
+        //!!!!
+        public DateTime DTofLastTimePostedWithWall()
+        {
+            if (posts != null) return posts.Last().time;
+            else return DateTime.MinValue;
+        }
+
     }
 }

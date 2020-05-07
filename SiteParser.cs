@@ -13,6 +13,7 @@ namespace SocNetParser
         public static Regex face = new Regex(@"facebook\.com\/\w+");
         public static Regex inst = new Regex(@"instagram\.com\/\w+");
         public static Regex vk = new Regex(@"vk\.com\/\w+");
+        public static Regex Vk = new Regex(@"vk\.com\/[\w\.]+");
         public static Regex mail = new Regex(@"\w[\w\d_\-]{0,15}\@[\w\-]{2,15}\.\w{1,3}");
         public static Regex phone = new Regex(@"\D(?<num>\+?[78]\ ?\(?\d{3}\)?\ ?\d{3}([ \-]?)\d{2}\1\d{2})\D");
         public static Regex adress = new Regex(@"[^>\n]{0,50}(улица|ул\.|проспект|просп\.|переулок|пер\.|д\.)[^<\n]{0,50}");
