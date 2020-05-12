@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Net;
+using System.Linq;
+using System.Text.Json;
+using System.IO;
 
 namespace SocNetParser
 {
@@ -14,12 +16,30 @@ namespace SocNetParser
     {
 
         public string Name { get; }
-        public List<Company> comps { get; set; }
+        public List<Company> comps { get; }
 
         private static WebClient webclient = new WebClient();
-        public BusinessPage(string name)
+
+      
+        public List<string> GetVkUrls()
+        {
+             return comps.Select(x => x.Vk).ToList(); 
+        }
+
+
+        public BusinessPage(string name,string pathToJson)
         {
             Name = name;
+            comps = GetCompaniesJson(pathToJson);
+        }
+
+
+
+
+
+        public static List<Company> GetCompaniesJson(string path)
+        {
+            return JsonSerializer.Deserialize<List<Company>>(File.ReadAllText(path));
         }
 
         public  void AddCompanyInfo()
