@@ -18,14 +18,16 @@ namespace SocNetParser
         static void Main()
         {
             //òåñò 
-
-            //  var t=Companies.GetCompaniesJson("../../../Data.json");
-            //  Companies.AddCompanyInfo(t);
-            // Companies.PrintCompanyInfo(t);    
            
-            var t = new VKGroup("club54751973");
-            t.LoadPosts(2);
-            Console.WriteLine(t.DTofLastTimePosted());
+
+           var t = new BusinessPage("pubs", "../../../Data.json");
+           
+            t.AddCompanyInfo();
+              var linqer = new Linqer(t);
+            linqer.StartLinq();
+            linqer.PrintBuisnessPage(t);
+           // foreach (var temp in t.GetVkUrls())
+               // Console.WriteLine(temp);
 
         }
     }
