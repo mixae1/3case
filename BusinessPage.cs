@@ -20,6 +20,7 @@ namespace SocNetParser
 
         private static WebClient webclient = new WebClient();
 
+
       //получаем ссылки на вк 
         public List<string> GetVkUrls()
         {
@@ -32,9 +33,6 @@ namespace SocNetParser
             Name = name;
             comps = GetCompaniesJson(pathToJson);
         }
-
-
-
 
         /// <summary>
         /// подгружаем данные с json файла
