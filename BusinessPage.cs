@@ -20,7 +20,8 @@ namespace SocNetParser
 
         private static WebClient webclient = new WebClient();
 
-      
+
+      //получаем ссылки на вк 
         public List<string> GetVkUrls()
         {
              return comps.Select(x => x.Vk).ToList(); 
@@ -33,10 +34,11 @@ namespace SocNetParser
             comps = GetCompaniesJson(pathToJson);
         }
 
-
-
-
-
+        /// <summary>
+        /// подгружаем данные с json файла
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public static List<Company> GetCompaniesJson(string path)
         {
             return JsonSerializer.Deserialize<List<Company>>(File.ReadAllText(path));
