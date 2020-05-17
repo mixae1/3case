@@ -1,12 +1,9 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using System.IO;
+﻿using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Net;
-using System.Linq;
 namespace SocNetParser
 {
-    //Россия, Ростов-на-Дону, Депутатская улица, 5а - дорабоать регулярку по адресам +
+    
 
     static class SiteParser
     {
@@ -19,10 +16,17 @@ namespace SocNetParser
         public static Regex adress = new Regex(@"[^>\n]{0,50}(улица|ул\.|проспект|просп\.|переулок|пер\.|д\.)[^<\n]{0,50}");
         public static Regex websites = new Regex(@"\D?https?:\/\/([а-яА-Яa-zA-Z0-9]\.?\-?)+\.\w{1,4}\D?");
 
-        partial class SiteInfo
-        {
 
-        }
+        //регулярки для сайта whois.ru (вернее для ответа от апишки этого сервиса)
+        public static Regex CheckAvail = new Regex(@"available\D:\D(no)\D");
+        public static Regex RusDomainCr = new Regex(@"created\s*:\s*(\d{4}-\d{2}-\d{2})");
+        public static Regex RusDomianTill = new Regex(@"paid-till\s*:\s*(\d{4}-\d{2}-\d{2})");
+        public static Regex EngDomainCr = new Regex(@"Creation Date\s*:\s*(\d{4}-\d{2}-\d{2})");
+        public static Regex EngDomainUpd = new Regex(@"Updated Date\s*:\s*(\d{4}-\d{2}-\d{2})");
+        public static Regex EngDomainExpr = new Regex(@"Expiration Date\s*:\s*(\d{4}-\d{2}-\d{2})");
+
+
+
 
         public static HashSet<string> SiteSearching(string site)
         {
@@ -65,15 +69,5 @@ namespace SocNetParser
         }
 
 
-        public static int GetPagesNumbs(string streamtext)
-        {
-            Regex p = new Regex(@"<p>[\s\S]+?<\/p>");
-            Regex values = new Regex(@"\d+");
-            var tmp = values.Matches(p.Match(streamtext).Value);
-            int f = int.Parse(tmp.First().Value);
-            int s = int.Parse(tmp.First().Value);
-
-            return f / s + f % s == 0 ? 0 : 1;
-        }
     }
 }

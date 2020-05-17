@@ -124,7 +124,6 @@ namespace SocNetParser
                 DateTime? update = string.IsNullOrEmpty(temp.updDate)?  nll: DateTime.Parse(temp.updDate.Trim()); 
                 DateTime ? expDate= string.IsNullOrEmpty(temp.expDate) ? nll: DateTime.Parse(temp.expDate.Trim());
                 lst.Add((crDate, update, expDate));
-
             }
 
             return lst;

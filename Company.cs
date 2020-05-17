@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 namespace SocNetParser
 {
@@ -24,7 +23,22 @@ namespace SocNetParser
 
         [JsonPropertyName("web")]
         //ссылка на сайт компании
-        public string website { get; set; }
+        public string Website
+        {
+            get
+            {
+
+                return web == null ?
+                        null : web.IndexOf("www.") == -1 ? web : web.Substring(web.IndexOf("www.") + 4);
+            }
+            set
+            {
+                web = value;
+            }
+        }
+
+        private string web;
+
 
          [JsonIgnore]
         public List<string> phones { get; set; }
@@ -40,23 +54,14 @@ namespace SocNetParser
 
         public string face { get; set; } = "";
 
+        public DateTime? registraionDomain { get; set; }
 
-        /// <summary>
-        /// основной конструктор
-        /// </summary>
-        /// <param name="nm">имя организации </param>
-        /// <param name="adrs">адреса организации </param>
-        /// <param name="hs">электронные почты организации</param>
-        /// <param name="web">сайт организации</param>
-        /// <param name="phn"> телефоны организации</param>
-        public Company(string nm, HashSet<string> adrs, HashSet<string> hs=null, string web=null, List<string> phn=null)
-        {
-            adress = adrs;
-            emails = hs;
-            name = nm;
-            website = web;
-            phones = phn;
-        }
+        public DateTime? expireDomain { get; set; }
+
+        public DateTime? UptDomain { get; set; }
+
+
+      
 
         //нужно для сериализации данных с json файла 
         //на случай если парсер яндекса останется на питухоне
