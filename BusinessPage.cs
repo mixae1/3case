@@ -20,19 +20,29 @@ namespace SocNetParser
 
         private static WebClient webclient = new WebClient();
 
-
-      //получаем ссылки на вк 
+      ///получаем ссылки на вк 
         public List<string> GetVkUrls()
         {
              return comps.Select(x => x.Vk).ToList(); 
         }
 
+        /// <summary>
+        /// получаем список сайтов оргов
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetDomains()
+        {
+            return comps.Select(x => x.Website).ToList();
+        }
 
         public BusinessPage(string name,string pathToJson)
         {
             Name = name;
             comps = GetCompaniesJson(pathToJson);
         }
+
+
+
 
         /// <summary>
         /// подгружаем данные с json файла
@@ -44,29 +54,31 @@ namespace SocNetParser
             return JsonSerializer.Deserialize<List<Company>>(File.ReadAllText(path));
         }
 
+        /// <summary>
+        /// основной метод дополнения инфы обходит сайты оргов
+        /// </summary>
         public  void AddCompanyInfo()
         {
-            //  int counter = 0;
+           
             foreach (var tmp in comps)
-            {    //counter++;
-                if (string.IsNullOrEmpty(tmp.website)) continue;
+            { 
+                if (string.IsNullOrEmpty(tmp.Website)) continue;
                 AddInfo(tmp);
-                //Console.WriteLine($"{counter} company from 25 was fullfilled");
-                if (tmp.Vk != null)
-                    Console.WriteLine(tmp.Vk);
+          
             }
         }
-
+        /// <summary>
+        /// дополнительный метод заходит на сайт конкретной организации и получает инфу
+        /// </summary>
+        /// <param name="comp"></param>
          void AddInfo(Company comp)
         {
-
-            string ur = "http://";
 
             string s;
 
             try
             {
-                s = webclient.DownloadString(ur + comp.website);
+                s = webclient.DownloadString("http://" + comp.Website);
             }
             catch
             {

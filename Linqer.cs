@@ -95,7 +95,7 @@ namespace SocNetParser
                 if (secondsPerMinPassed < 60 && counter == 30)
                 {
                     Thread.Sleep(60-(int)secondsPerMinPassed); // контролируем ограничение в 30 запрсов/мин 
-                    counter = 0;                            // если уже прошла минута и было сделано 30 то засыпаем на остаток минуты
+                    counter = 30;                            // если уже прошла минута и было сделано 30 то засыпаем на остаток минуты
                     counterTime = DateTime.Now;
                 }
 
@@ -124,8 +124,6 @@ namespace SocNetParser
                 DateTime? update = string.IsNullOrEmpty(temp.updDate)?  nll: DateTime.Parse(temp.updDate.Trim()); 
                 DateTime ? expDate= string.IsNullOrEmpty(temp.expDate) ? nll: DateTime.Parse(temp.expDate.Trim());
                 lst.Add((crDate, update, expDate));
-
-               
             }
 
             return lst;

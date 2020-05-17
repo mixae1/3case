@@ -4,12 +4,8 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System;
 using System.Linq;
-using System.Threading;
 using System.Text.Json;
-using VkNet.Exception;
-using System.Net.Http;
-using HtmlAgilityPack;
-using System.Threading.Tasks;
+
 
 namespace SocNetParser
 {
@@ -38,12 +34,9 @@ namespace SocNetParser
             int counter = 0;
             foreach (var tmp in lst)
             {    counter++;
-                if (string.IsNullOrEmpty(tmp.website))
-                {
-                    if (tmp.Vk != null)
-                        tmp.lastVkPost = GetLastVkPost(tmp.Vk);
+                if (string.IsNullOrEmpty(tmp.Website))
                     continue;
-                } 
+                 
                 AddInfo(tmp);
                Console.WriteLine($"{counter} company from 25 was fullfilled");
                 
@@ -59,7 +52,7 @@ namespace SocNetParser
 
             try
             {
-                s = webclient.DownloadString(ur + comp.website);
+                s = webclient.DownloadString(ur + comp.Website);
             }
             catch
             {
@@ -90,10 +83,6 @@ namespace SocNetParser
                     comp.Vk = vk.Value;
             }
 
-            // Task<DateTime> t = new Task<DateTime>(()=>GetLastVkPost(comp.Vk));
-
-           var time= GetLastVkPost(comp.Vk);
-
             var face = SiteParser.face.Match(s);
             if (face.Success)
             {
@@ -117,11 +106,10 @@ namespace SocNetParser
                 comp.adress.Add(x.ToString());
             }
            
-            if (time.CompareTo(DateTime.MinValue) >0)
-                comp.lastVkPost = time;
-            else
-                comp.lastVkPost = null;
+          
         }
+
+
 
         
 
@@ -162,11 +150,14 @@ namespace SocNetParser
                  Console.WriteLine(temp.phones[0]);
 
                 Console.WriteLine(temp.lastVkPost);
-                Console.WriteLine(temp.website);
+                Console.WriteLine(temp.Website);
                 Console.WriteLine(temp.face);
                 Console.WriteLine(temp.Vk);
                 Console.WriteLine(temp.inst);
 
+                Console.WriteLine("creation domain time"+temp.registraionDomain);
+                Console.WriteLine("update domain time" + temp.UptDomain);
+                Console.WriteLine("expire domain time" + temp.expireDomain);
 
                 Console.WriteLine("//////////");
             }
