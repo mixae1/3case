@@ -11,6 +11,9 @@ namespace SocNetParser
     {  
         //АТТРИБУТЫ ЛУЧШЕ ОСТАВИТЬ ,ХРЕН ЕГО ЗНАЕТ КАК ОНИ БУДУТ В ДЖСОН ФАЙЛЕ НАЗВАНЫ ,ЗДЕСЬ ИХ ИЗМЕНИТЬ БЫСТРЕЕ БУДЕТ
 
+            // id для бдшки
+        public int id { get; set; }
+
         public string name { get; set; }
          
         [JsonPropertyName("adress")]

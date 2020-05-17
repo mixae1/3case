@@ -6,12 +6,16 @@ using System.Threading.Tasks;
 using System.Threading;
 using SocNetParser.Properties;
 using System.Text.RegularExpressions;
+using System.Text.Json;
+using System.IO;
 
 namespace SocNetParser
 {
     class Linqer
     {
         List<BusinessPage> pages { get;  }
+        //пусть здесь будет ,нужно чтоб не указывать полный пусть ,тк в ресурсах нужно полный путь указывать
+        private string jsonIdPath = "../../../id.json";
 
         public Linqer(params  BusinessPage[] page)
         {
@@ -32,6 +36,8 @@ namespace SocNetParser
 
                Task<List<DateTime?>> vktask =Task.Run(()=> GetVkPostDateTime(vkurls));
                 Task<List<(DateTime? regdate, DateTime? expdate, DateTime? upddate)>> techtask = Task.Run(() => GetTechSiteInfo(domains));
+                Task<Dictionary<string, int>> idTask = Task.Run(() => GetCompsId(jsonIdPath));
+                
                 /*
                  * 
                  * + еще парсеры: 
@@ -43,7 +49,8 @@ namespace SocNetParser
               Task.WaitAll(vktask,techtask);
                 var vkres = vktask.Result;
                 var techres = techtask.Result;
-                AddInfoInPage(vkres,techres);
+                var idres = idTask.Result;
+                AddInfoInPage(new ParsersInfo(vkres,techres,idres));
             }
         }
 
@@ -57,11 +64,10 @@ namespace SocNetParser
         {
             Console.WriteLine("getting vk info:");
             List<DateTime?> vkUrls = new List<DateTime?>();
-           // int counter = 0;
             foreach (var tmp in urls)
             {
                 DateTime? dt = null;
-               // counter++;
+             
                 if (!string.IsNullOrEmpty(tmp))
                 {
                     var vk = new VKGroup(tmp);
@@ -69,8 +75,6 @@ namespace SocNetParser
                         dt = vk.DTofLastTimePostedWithWall();
                 }
                 vkUrls.Add(dt);
-                //Console.WriteLine($"{counter} from 25");
-               
             }
 
             return vkUrls;
@@ -92,13 +96,14 @@ namespace SocNetParser
             foreach (var tmp in urls)
             {
                 double secondsPerMinPassed = DateTime.Now.Subtract(counterTime).TotalSeconds;
-                if (secondsPerMinPassed < 60 && counter == 30)
+                if (secondsPerMinPassed < 60)
                 {
-                    Thread.Sleep(60-(int)secondsPerMinPassed); // контролируем ограничение в 30 запрсов/мин 
-                    counter = 30;                            // если уже прошла минута и было сделано 30 то засыпаем на остаток минуты
-                    counterTime = DateTime.Now;
+                    if (counter >= 29) //перестраховка
+                        Thread.Sleep(60 - (int)secondsPerMinPassed); // контролируем ограничение в 30 запрсов/мин 
+                    counter = 0;                            // если уже прошла минута и было сделано 30 то засыпаем на остаток минуты
                 }
-
+                else
+                    counterTime = DateTime.Now; // если уже прошла минута ,то просто переприсваиваем счетчик времени
 
                 if (string.IsNullOrEmpty(tmp))
                 {
@@ -124,12 +129,14 @@ namespace SocNetParser
                 DateTime? update = string.IsNullOrEmpty(temp.updDate)?  nll: DateTime.Parse(temp.updDate.Trim()); 
                 DateTime ? expDate= string.IsNullOrEmpty(temp.expDate) ? nll: DateTime.Parse(temp.expDate.Trim());
                 lst.Add((crDate, update, expDate));
+
+               
             }
 
             return lst;
         }
 
-        //вспомогательный метод
+        //вспомогательный метод для получения инфы с апишки whois
         private (string creationDate, string updDate, string expDate) GetDates(string ans,string domain)
         {
             if (SiteParser.CheckAvail.IsMatch(ans))
@@ -147,7 +154,11 @@ namespace SocNetParser
             return (null, null, null);
         }
 
-
+        // получаем инфу об айдишках оргов
+        private Dictionary<string, int> GetCompsId(string jsonFilePath)
+        { 
+         return JsonSerializer.Deserialize<Dictionary<string, int>>(File.ReadAllText(jsonFilePath));
+        }
 
 
         /// <summary>
@@ -155,10 +166,10 @@ namespace SocNetParser
         /// </summary>
         /// <param name="vkdates"></param>
         /// <param name="techdate"></param>
-        void AddInfoInPage(List<DateTime?> vkdates,List<(DateTime?,DateTime?, DateTime?)> techdate=null)
+        private  void AddInfoInPage(ParsersInfo parsers)
         {
             Console.WriteLine("adding all info:");
-            Console.WriteLine(techdate.Count+" размер списка " );
+            Console.WriteLine(parsers.techdate.Count+" размер списка " ); //для проверки потом удалить
             foreach (var tmp in pages.Select(x => x.comps))
             {
                
@@ -166,11 +177,19 @@ namespace SocNetParser
                 foreach (var temp in tmp)
                 {
                     
-                    temp.lastVkPost = vkdates[counter];
+                    temp.lastVkPost =parsers.vkdates[counter];
                     
-                    temp.registraionDomain = techdate[counter].Item1;
-                    temp.UptDomain = techdate[counter].Item2;
-                    temp.expireDomain = techdate[counter].Item3;
+                    temp.registraionDomain = parsers.techdate[counter].Item1;
+                    temp.UptDomain = parsers.techdate[counter].Item2;
+                    temp.expireDomain = parsers.techdate[counter].Item3;
+
+                    if (parsers.Ids.ContainsKey(temp.name))
+                        temp.id = parsers.Ids[temp.name];
+                    else
+                    {
+                        temp.id = parsers.Ids.Count + 1;
+                        parsers.Ids.Add(temp.name, temp.id);
+                    }
 
                     counter++;
                     Console.WriteLine($"{counter} from 25");
@@ -178,8 +197,16 @@ namespace SocNetParser
                     
                 
             }
+
+            //хрен его знает куда это запихнуть ,если производительность сильно не упадет ,то оставить здесь
+            File.WriteAllText(jsonIdPath,JsonSerializer.Serialize(parsers.Ids));
         }
 
+
+
+
+
+        //выводим инфу о компаниях бизнес-типа
         public void PrintBuisnessPage(BusinessPage page)
         {
             Companies.PrintCompanyInfo(page.comps);
