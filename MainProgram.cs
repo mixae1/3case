@@ -8,6 +8,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Net.Http.Headers;
 using VkNet;
+using System.Runtime.InteropServices;
+using SocNetParser.Properties;
+using System.Text.Json;
 
 namespace SocNetParser
 {
@@ -19,16 +22,14 @@ namespace SocNetParser
         {
             //òåñò 
            
-
            var t = new BusinessPage("pubs", "../../../Data.json");
-           
-            t.AddCompanyInfo();
-              var linqer = new Linqer(t);
-            linqer.StartLinq();
-            linqer.PrintBuisnessPage(t);
-           // foreach (var temp in t.GetVkUrls())
-               // Console.WriteLine(temp);
 
+            t.AddCompanyInfo();
+            var linqer = new Linqer(t);
+            linqer.StartLinq();
+              linqer.PrintBuisnessPage(t);
+              
+           
         }
     }
 }
