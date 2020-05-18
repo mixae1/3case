@@ -133,6 +133,7 @@ namespace SocNetParser
             foreach (var temp in lst)
             {
                 Console.WriteLine(temp.name);
+                Console.WriteLine(temp.id);
 
                 if (temp.adress == null) Console.WriteLine("no adress");
                 else 
