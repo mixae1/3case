@@ -155,10 +155,8 @@ namespace SocNetParser
                 Console.WriteLine(temp.face);
                 Console.WriteLine(temp.Vk);
                 Console.WriteLine(temp.inst);
-
-                Console.WriteLine("creation domain time"+temp.registraionDomain);
-                Console.WriteLine("update domain time" + temp.UptDomain);
-                Console.WriteLine("expire domain time" + temp.expireDomain);
+                Console.WriteLine(temp.techinfo.ToString());
+                
 
                 Console.WriteLine("//////////");
             }

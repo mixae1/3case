@@ -8,6 +8,7 @@ using SocNetParser.Properties;
 using System.Text.RegularExpressions;
 using System.Text.Json;
 using System.IO;
+using Flurl.Util;
 
 namespace SocNetParser
 {
@@ -99,7 +100,7 @@ namespace SocNetParser
                 if (secondsPerMinPassed < 60)
                 {
                     if (counter >= 29) //перестраховка
-                        Thread.Sleep(60 - (int)secondsPerMinPassed); // контролируем ограничение в 30 запрсов/мин 
+                        Thread.Sleep((60 - (int)secondsPerMinPassed)*1000); // контролируем ограничение в 30 запрсов/мин 
                     counter = 0;                            // если уже прошла минута и было сделано 30 то засыпаем на остаток минуты
                 }
                 else
@@ -155,7 +156,7 @@ namespace SocNetParser
         }
 
         // получаем инфу об айдишках оргов
-        private Dictionary<string, int> GetCompsId(string jsonFilePath)
+        public Dictionary<string, int> GetCompsId(string jsonFilePath)
         { 
          return JsonSerializer.Deserialize<Dictionary<string, int>>(File.ReadAllText(jsonFilePath));
         }
@@ -179,9 +180,9 @@ namespace SocNetParser
                     
                     temp.lastVkPost =parsers.vkdates[counter];
                     
-                    temp.registraionDomain = parsers.techdate[counter].Item1;
-                    temp.UptDomain = parsers.techdate[counter].Item2;
-                    temp.expireDomain = parsers.techdate[counter].Item3;
+                    temp.techinfo =new TechSiteInfo(parsers.techdate[counter].Item1,
+                    parsers.techdate[counter].Item2,
+                     parsers.techdate[counter].Item3);
 
                     if (parsers.Ids.ContainsKey(temp.name))
                         temp.id = parsers.Ids[temp.name];
@@ -192,18 +193,26 @@ namespace SocNetParser
                     }
 
                     counter++;
-                    Console.WriteLine($"{counter} from 25");
+                    Console.WriteLine($"{counter} from  {parsers.techdate.Count}");
                 }
                     
                 
             }
 
             //хрен его знает куда это запихнуть ,если производительность сильно не упадет ,то оставить здесь
-            File.WriteAllText(jsonIdPath,JsonSerializer.Serialize(parsers.Ids));
+            //File.WriteAllText(jsonIdPath,JsonSerializer.Serialize(parsers.Ids));
+            MakeJsonFile(jsonIdPath, parsers.Ids);
         }
 
+        public void MakeJsonFile<T>(string path, IEnumerable<T> coll)
+        {
+            File.WriteAllText(path, JsonSerializer.Serialize(coll));
+        }
 
-
+        public void MakeJsonFile<T,T1>(string path,IDictionary<T,T1> coll)
+        {
+            File.WriteAllText(path, JsonSerializer.Serialize(coll));
+        }
 
 
         //выводим инфу о компаниях бизнес-типа
