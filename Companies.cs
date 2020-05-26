@@ -155,7 +155,7 @@ namespace SocNetParser
                 Console.WriteLine(temp.face);
                 Console.WriteLine(temp.Vk);
                 Console.WriteLine(temp.inst);
-                Console.WriteLine(temp.techinfo.ToString());
+                Console.WriteLine(temp.techinfo?.ToString());
                 
 
                 Console.WriteLine("//////////");

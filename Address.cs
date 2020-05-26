@@ -18,9 +18,9 @@ namespace SocNetParser
 
         public override string ToString()
         {
-            return '\n'+ "id " + Organization + '\n'
-                + Email + '\n' +
-                Phone + '\n' + adress;
+            return '\n'+ " id " + Organization + '\n' + " email: "
+                + Email + '\n' + " phone :" +
+                Phone + '\n' + " adress :"+ adress;
 
         }
 

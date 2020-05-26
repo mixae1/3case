@@ -16,5 +16,12 @@ namespace SocNetParser
         public string LatestMd5 { get; set; }
 
         public virtual Organization OrganizationNavigation { get; set; }
+
+        public override string ToString()
+        {
+            return " domain : " + Domain + '\n' + " reg time " + Registred + '\n'
+                + "prolongated " + Prolongated + '\n' +
+                " last update " + LastUpdate;
+        }
     }
 }

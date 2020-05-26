@@ -33,9 +33,8 @@ namespace SocNetParser
         public override string ToString()
         {
             return '\n' + type + '\n' +
-                 "id " + Organization +
-                 "auditory " + Auditory + '\n' +
-               "link" + Link + '\n' +
+                 " auditory " + Auditory + '\n' +
+               " link" + Link + '\n' +
                 "lastupdate " + LastUpdate;
         }
 
