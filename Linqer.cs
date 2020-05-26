@@ -234,11 +234,11 @@ namespace SocNetParser
                         Organization = temp.id,
                         Domain = temp.Website,
                         Registred = temp.techinfo.registraionDomain,
-                        LastUpdate = temp.techinfo.UptDomain,
+                        LastUpdate =null,
                         Prolongated = temp.techinfo.expireDomain
                     };
 
-                    lst.Add(new Organization(new Website[] { web },new Address[] { adr }, new HashSet<SocialAccount>(new SocialAccount[] { vksocial, instsocial })));
+                    lst.Add(new Organization(temp.name,new Website[] { web },new Address[] { adr }, new HashSet<SocialAccount>(new SocialAccount[] { vksocial, instsocial })));
                 }
             }
             return lst;
