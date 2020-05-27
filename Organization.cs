@@ -14,11 +14,12 @@ namespace SocNetParser
         }
 
 
-        public Organization(ICollection<Website> web, ICollection<Address> ad, HashSet<SocialAccount> acc)
+        public Organization(string name,ICollection<Website> web, ICollection<Address> ad, HashSet<SocialAccount> acc)
         {
             Address = ad;
             Website = web;
             SocialAccount = acc;
+            Name = name;
         }
 
       
@@ -36,9 +37,9 @@ namespace SocNetParser
 
         public override string ToString()
         {
-            string s = '\n'+ "id " + Id + '\n' + Name + '\n' + Address.ToString();
+            string s = '\n'+ "id " + Id + '\n' + Name + '\n' + Address.FirstOrDefault().ToString();
             foreach (var t in SocialAccount)
-                s += t.ToString();
+                s +='\n'+ t.ToString();
             return s + Website.FirstOrDefault();
         }
 
