@@ -1,26 +1,21 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Mixael\\Source\\Repos\\mixae1\\3case\\SocNetParser.csproj": {}
+    "C:\\Users\\User\\Source\\Repos\\3case5\\SocNetParser.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Mixael\\Source\\Repos\\mixae1\\3case\\SocNetParser.csproj": {
+    "C:\\Users\\User\\Source\\Repos\\3case5\\SocNetParser.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Mixael\\Source\\Repos\\mixae1\\3case\\SocNetParser.csproj",
+        "projectUniqueName": "C:\\Users\\User\\Source\\Repos\\3case5\\SocNetParser.csproj",
         "projectName": "SocNetParser",
-        "projectPath": "C:\\Users\\Mixael\\Source\\Repos\\mixae1\\3case\\SocNetParser.csproj",
-        "packagesPath": "C:\\Users\\Mixael\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Mixael\\Source\\Repos\\mixae1\\3case\\obj\\",
+        "projectPath": "C:\\Users\\User\\Source\\Repos\\3case5\\SocNetParser.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\User\\Source\\Repos\\3case5\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet\\",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Mixael\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
@@ -43,6 +38,24 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[3.1.4, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.1.4, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[3.1.3, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL.Design": {
+              "target": "Package",
+              "version": "[1.1.0, )"
+            },
             "VkNet": {
               "target": "Package",
               "version": "[1.51.0, )"

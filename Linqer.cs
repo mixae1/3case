@@ -9,7 +9,9 @@ using System.Text.RegularExpressions;
 using System.Text.Json;
 using System.IO;
 using Flurl.Util;
-
+using Microsoft.EntityFrameworkCore;
+using VkNet.Enums.SafetyEnums;
+using Npgsql.EntityFrameworkCore;
 namespace SocNetParser
 {
     class Linqer
@@ -21,7 +23,7 @@ namespace SocNetParser
         public Linqer(params  BusinessPage[] page)
         {
             pages = new List<BusinessPage>(page);
-            
+          
         }
 
         /// <summary>
@@ -200,19 +202,63 @@ namespace SocNetParser
             }
 
             //хрен его знает куда это запихнуть ,если производительность сильно не упадет ,то оставить здесь
-            //File.WriteAllText(jsonIdPath,JsonSerializer.Serialize(parsers.Ids));
-            MakeJsonFile(jsonIdPath, parsers.Ids);
+            File.WriteAllText(jsonIdPath,JsonSerializer.Serialize(parsers.Ids));
+            
+
         }
 
-        public void MakeJsonFile<T>(string path, IEnumerable<T> coll)
+        public List<Organization> PrepareToDB()
         {
-            File.WriteAllText(path, JsonSerializer.Serialize(coll));
+            var lst = new List<Organization>();
+            foreach (var tmp in pages.Select(x=>x.comps))
+            {
+                foreach (var temp in tmp)
+                {
+                    var vksocial = new SocialAccount()
+                    { Organization = temp.id, Link = temp.Vk,type = social_type.vk , LastUpdate=temp.lastVkPost };
+
+                    var instsocial = new SocialAccount()
+                    { Organization = temp.id, Link = temp.inst,type =social_type.instagram };
+
+                    var adr = new Address()
+                    {
+                        Email = temp.emails.FirstOrDefault(),
+                        Organization = temp.id,
+                        Phone = temp.phones.FirstOrDefault(),
+                        City = "Ростов-на-Дону",
+                        adress = temp.adress.FirstOrDefault()
+                    };
+
+                    var web = new Website()
+                    {
+                        Organization = temp.id,
+                        Domain = temp.Website,
+                        Registred = temp.techinfo.registraionDomain,
+                        LastUpdate =null,
+                        Prolongated = temp.techinfo.expireDomain
+                    };
+
+                    lst.Add(new Organization(temp.name,new Website[] { web },new Address[] { adr }, new HashSet<SocialAccount>(new SocialAccount[] { vksocial, instsocial })));
+                }
+            }
+            return lst;
         }
 
-        public void MakeJsonFile<T,T1>(string path,IDictionary<T,T1> coll)
+
+        public void LoadToDB()
         {
-            File.WriteAllText(path, JsonSerializer.Serialize(coll));
+            var comps = PrepareToDB();
+            Npgsql.NpgsqlConnection.GlobalTypeMapper.MapEnum<social_type>("social_type");
+            using (DBContext db = new DBContext())
+            {
+               
+                foreach (var tmp in comps)
+                    db.Add(tmp);
+                db.SaveChanges();
+            }
         }
+
+
 
 
         //выводим инфу о компаниях бизнес-типа
