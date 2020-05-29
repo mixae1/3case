@@ -8,10 +8,9 @@ using SocNetParser.Properties;
 using System.Text.RegularExpressions;
 using System.Text.Json;
 using System.IO;
-using Flurl.Util;
-using Microsoft.EntityFrameworkCore;
-using VkNet.Enums.SafetyEnums;
-using Npgsql.EntityFrameworkCore;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+
 namespace SocNetParser
 {
     class Linqer
@@ -20,6 +19,8 @@ namespace SocNetParser
         //пусть здесь будет ,нужно чтоб не указывать полный пусть ,тк в ресурсах нужно полный путь указывать
         private string jsonIdPath = "../../../id.json";
 
+        
+      
         public Linqer(params  BusinessPage[] page)
         {
             pages = new List<BusinessPage>(page);
@@ -163,6 +164,45 @@ namespace SocNetParser
          return JsonSerializer.Deserialize<Dictionary<string, int>>(File.ReadAllText(jsonFilePath));
         }
 
+        /// <summary>
+        /// получаем 
+        /// </summary>
+        /// <returns></returns>
+        protected List<int?> GetInstAccAud()
+        {
+              var tmp=  Regex.Replace(File.ReadAllText("InstData.json"), @",]", "]"); // костыль тк в файле баг и его нормально не десериализовать; TODO: исправить баг в коде на пыхе
+                var temps = JsonSerializer.Deserialize<string[]>(tmp);
+                int? t = null;
+                return temps.Select(x => x == null ? t : int.Parse(Regex.Replace(Regex.Replace(x, "k", "00"), @"[\.|,]", ""))).ToList();
+              
+                                         
+        }
+
+        // метод запускающий парсер инсты
+        public List<int?> UploadInstFile()
+        {   
+           // File.Create("InstData.json");
+         
+            //new3t.php -доработанный файл Марины ,  оригнальный на гите лежит с названием new3.php 
+            ProcessStartInfo info = new ProcessStartInfo("php.exe", "../../../new3t.php");
+            info.UseShellExecute = false;
+            info.ErrorDialog = false;
+            info.RedirectStandardError = true;
+            info.RedirectStandardInput = true;
+            info.RedirectStandardOutput = true;
+            info.CreateNoWindow = true;
+
+
+            Process p = new Process();
+            p.StartInfo = info;
+
+          p.Start();
+            p.WaitForExit();
+            return GetInstAccAud();
+            
+        }
+
+
 
         /// <summary>
         /// добавляет полученную инфу в компании определенного бизнес-типа
@@ -218,7 +258,7 @@ namespace SocNetParser
                     { Organization = temp.id, Link = temp.Vk,type = social_type.vk , LastUpdate=temp.lastVkPost };
 
                     var instsocial = new SocialAccount()
-                    { Organization = temp.id, Link = temp.inst,type =social_type.instagram };
+                    { Organization = temp.id, Link = temp.inst,type =social_type.instagram , Auditory=temp.InstAud };
 
                     var adr = new Address()
                     {

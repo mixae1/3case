@@ -24,16 +24,18 @@ namespace SocNetParser
            
            var t = new BusinessPage("pubs", "../../../Data.json");
 
-           t.AddCompanyInfo();
+        //   t.AddCompanyInfo();
 
 
             var linqer = new Linqer(t);
 
-         linqer.StartLinq();
+            foreach (var tr in linqer.UploadInstFile())
+                Console.WriteLine(tr);
+        // linqer.StartLinq();
             Console.WriteLine("//////////");
            
            
-            linqer.LoadToDB();
+          //  linqer.LoadToDB();
             
             Console.WriteLine("finished");
         }
