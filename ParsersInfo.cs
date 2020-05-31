@@ -12,15 +12,25 @@ namespace SocNetParser
         //список с датами:дата создания домена обновления и окончания юзанья домена
        public List<(DateTime?, DateTime?, DateTime?)> techdate { get; private set; }
         //словарь с айдишками оргов
-        public Dictionary<string, int> Ids { get; private set; }
+        public Dictionary<string,IdTables> Ids { get; private set; }
 
-        public ParsersInfo(List<DateTime?> vk, List<(DateTime?, DateTime?, DateTime?)> techs, Dictionary<string, int> ids)
+        // список кол-во подписоты инсты
+        public List<int?> instSubsNum { get; private set; }
+        public ParsersInfo(List<DateTime?> vk, List<(DateTime?, DateTime?, DateTime?)> techs, Dictionary<string,IdTables> ids, List<int?> instLst)
         {
             vkdates = vk;
             techdate = techs;
             Ids = ids;
+            instSubsNum = instLst;
         }
-      
+        public ParsersInfo(List<DateTime?> vk, List<(DateTime?, DateTime?, DateTime?)> techs, List<int?> instLst)
+        {
+
+            vkdates = vk;
+            techdate = techs;
+            instSubsNum = instLst;
+        }
+
         public void VkInfo()
         {
             foreach (var x in vkdates)
@@ -44,6 +54,13 @@ namespace SocNetParser
             foreach (var x in Ids)
                 Console.WriteLine("company:" + x.Key+" id:"+x.Value);
         }
+
+        public void InstInfo()
+        {
+            foreach (var x in instSubsNum)
+                Console.WriteLine("inst subs: " + x);
+        }
+
 
     }
 }
