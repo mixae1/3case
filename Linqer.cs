@@ -8,18 +8,21 @@ using SocNetParser.Properties;
 using System.Text.RegularExpressions;
 using System.Text.Json;
 using System.IO;
-using Flurl.Util;
-using Microsoft.EntityFrameworkCore;
-using VkNet.Enums.SafetyEnums;
-using Npgsql.EntityFrameworkCore;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using VkNet.Model.Attachments;
+using System.ComponentModel;
+
 namespace SocNetParser
 {
+
+
+
     class Linqer
     {
         List<BusinessPage> pages { get;  }
-        //пусть здесь будет ,нужно чтоб не указывать полный пусть ,тк в ресурсах нужно полный путь указывать
-        private string jsonIdPath = "../../../id.json";
-
+        
+      
         public Linqer(params  BusinessPage[] page)
         {
             pages = new List<BusinessPage>(page);
@@ -36,24 +39,23 @@ namespace SocNetParser
             {
                 var vkurls = tmp.GetVkUrls();
                 var domains = tmp.GetDomains();
+                var names = tmp.GetCompNames();
+                File.WriteAllText("InstUrls.json", JsonSerializer.Serialize(tmp.GetInsTurls()));
+                //File.WriteAllText("InstData.json", "");
 
                Task<List<DateTime?>> vktask =Task.Run(()=> GetVkPostDateTime(vkurls));
                 Task<List<(DateTime? regdate, DateTime? expdate, DateTime? upddate)>> techtask = Task.Run(() => GetTechSiteInfo(domains));
-                Task<Dictionary<string, int>> idTask = Task.Run(() => GetCompsId(jsonIdPath));
+                Task<Dictionary<string,IdTables>> idTask = Task.Run(() => GetCompsId(names));
+                Task<List<int?>> instTask = Task.Run(() => GetInstAccAud());
                 
-                /*
-                 * 
-                 * + еще парсеры: 
-                 * 2) инсты
-                 * 3) еще какой-нибудь херни 
-                 * !!!!!! если будут траблы с производительностью на компе или серваке сразу написать мне!!!!!
-                 * 
-                */
-              Task.WaitAll(vktask,techtask);
+             
+              Task.WaitAll(vktask,techtask,instTask);
                 var vkres = vktask.Result;
                 var techres = techtask.Result;
                 var idres = idTask.Result;
-                AddInfoInPage(new ParsersInfo(vkres,techres,idres));
+                var instres = instTask.Result;
+
+                AddInfoInPage(new ParsersInfo(vkres,techres,idres,instres));
             }
         }
 
@@ -135,7 +137,7 @@ namespace SocNetParser
 
                
             }
-
+            //File.WriteAllText("techsite.json", JsonSerializer.Serialize(lst));
             return lst;
         }
 
@@ -157,11 +159,76 @@ namespace SocNetParser
             return (null, null, null);
         }
 
-        // получаем инфу об айдишках оргов
-        public Dictionary<string, int> GetCompsId(string jsonFilePath)
-        { 
-         return JsonSerializer.Deserialize<Dictionary<string, int>>(File.ReadAllText(jsonFilePath));
+        // получаем инфу об айдишках оргов 
+        // делаем асинхронно для увеличения производительности
+        // мб потом вытянем все таблицы сразу а не по запросу
+        public Dictionary<string,IdTables> GetCompsId(HashSet<string> comps)
+        {
+            Dictionary<string,IdTables> dct = new Dictionary<string,IdTables>();
+            Npgsql.NpgsqlConnection.GlobalTypeMapper.MapEnum<social_type>("social_type");
+            DBContext db = new DBContext();
+            var org_temps = db.Organization.ToList();
+          
+                foreach (Organization ord in org_temps)
+                {
+                    if (ord.Name == null) continue;
+
+                if (comps.Contains(ord.Name) && !dct.ContainsKey(ord.Name))
+                    dct.Add(ord.Name, new IdTables(ord.Id,
+                        db.Website.Where(x => x.Organization == ord.Id).FirstOrDefault().Id,
+                        db.Address.Where(x => x.Organization == ord.Id).FirstOrDefault().Id,
+                        db.SocialAccount.Where(x => x.Organization == ord.Id).Where(x => x.type == social_type.instagram).First().Id,
+                        db.SocialAccount.Where(x => x.Organization == ord.Id).Where(x => x.type == social_type.vk).First().Id));
+
+                }
+
+        
+
+            return dct;
         }
+
+       // вспомогательный метод ,который из джсон файла инсты получает данные
+       // пока не разберемся с инстой будем заранее полученные данные из инсты брать
+
+       public List<int?> GetInstAccAud()
+        {
+              var tmp=  Regex.Replace(File.ReadAllText("InstData.json"), @",]", "]"); // костыль тк в файле баг и его нормально не десериализовать; TODO: исправить баг в коде на пыхе
+                var temps = JsonSerializer.Deserialize<string[]>(tmp);
+                int? t = null;
+                return temps.Select(x => x == null ? t : int.Parse(Regex.Replace(Regex.Replace(x, "k", "00"), @"[\.|,]", ""))).ToList();
+              
+                                         
+        }
+
+        /// <summary>
+        /// метод для запуска парсера инсты на пыхе 
+        /// </summary>
+        /// <returns></returns>
+        public List<int?> UploadInstFile()
+        { 
+            
+            // File.Create("InstData.json");
+            Console.WriteLine("starting inst parser:");
+            //new3t.php -доработанный файл Марины ,  оригнальный на гите лежит с названием new3.php 
+            ProcessStartInfo info = new ProcessStartInfo("php.exe", "../../../new3t.php");
+            info.UseShellExecute = false;
+            info.ErrorDialog = false;
+            info.RedirectStandardError = true;
+            info.RedirectStandardInput = true;
+            info.RedirectStandardOutput = true;
+            info.CreateNoWindow = true;
+
+
+            Process p = new Process();
+            p.StartInfo = info;
+
+          p.Start();
+            p.WaitForExit();
+            
+            return GetInstAccAud();
+            
+        }
+
 
 
         /// <summary>
@@ -173,55 +240,61 @@ namespace SocNetParser
         {
             Console.WriteLine("adding all info:");
             Console.WriteLine(parsers.techdate.Count+" размер списка " ); //для проверки потом удалить
+            var bp = pages.Select(x => x.Name).ToList();
             foreach (var tmp in pages.Select(x => x.comps))
             {
-               
+                int curnum = 0;
                 int counter = 0;
                 foreach (var temp in tmp)
                 {
                     
                     temp.lastVkPost =parsers.vkdates[counter];
-                    
+
+                    temp.InstAud = parsers.instSubsNum[counter];
                     temp.techinfo =new TechSiteInfo(parsers.techdate[counter].Item1,
                     parsers.techdate[counter].Item2,
                      parsers.techdate[counter].Item3);
 
                     if (parsers.Ids.ContainsKey(temp.name))
-                        temp.id = parsers.Ids[temp.name];
-                    else
                     {
-                        temp.id = parsers.Ids.Count + 1;
-                        parsers.Ids.Add(temp.name, temp.id);
+                        temp.ids = parsers.Ids[temp.name];
                     }
+                   
 
                     counter++;
                     Console.WriteLine($"{counter} from  {parsers.techdate.Count}");
                 }
-                    
+                Console.WriteLine("//////////////");
+               LoadToDB(bp[curnum]);
+                curnum++;
                 
             }
 
-            //хрен его знает куда это запихнуть ,если производительность сильно не упадет ,то оставить здесь
-            File.WriteAllText(jsonIdPath,JsonSerializer.Serialize(parsers.Ids));
-            
 
         }
 
-        public List<Organization> PrepareToDB()
+        //TODO : РЕАЛИЗОВАТЬ СЛОВАРЬ : КЛЮЧ АЙДИ КАТЕГОРИИ: ЗНАЧ МНОЖЕСТВО КАТЕГРИИИМЯ
+        public List<Organization> PrepareToDB(string cur)
         {
             var lst = new List<Organization>();
+            int counter = 1;
+
+
+
+
             foreach (var tmp in pages.Select(x=>x.comps))
             {
                 foreach (var temp in tmp)
                 {
                     var vksocial = new SocialAccount()
-                    { Organization = temp.id, Link = temp.Vk,type = social_type.vk , LastUpdate=temp.lastVkPost };
+                    { Id=temp.ids.Vk_Id,Organization = temp.id, Link = temp.Vk,type = social_type.vk , LastUpdate=temp.lastVkPost };
 
                     var instsocial = new SocialAccount()
-                    { Organization = temp.id, Link = temp.inst,type =social_type.instagram };
+                    { Id=temp.ids.Inst_Id, Organization = temp.id, Link = temp.inst,type =social_type.instagram , Auditory=temp.InstAud };
 
                     var adr = new Address()
                     {
+                        Id = temp.ids.Add_Id,
                         Email = temp.emails.FirstOrDefault(),
                         Organization = temp.id,
                         Phone = temp.phones.FirstOrDefault(),
@@ -230,35 +303,101 @@ namespace SocNetParser
                     };
 
                     var web = new Website()
-                    {
+                    {   
+                        Id=temp.ids.Web_Id,
                         Organization = temp.id,
                         Domain = temp.Website,
                         Registred = temp.techinfo.registraionDomain,
                         LastUpdate =null,
                         Prolongated = temp.techinfo.expireDomain
+                       
                     };
 
-                    lst.Add(new Organization(temp.name,new Website[] { web },new Address[] { adr }, new HashSet<SocialAccount>(new SocialAccount[] { vksocial, instsocial })));
+
+
+                    var catname = new CategoryName()
+                    {
+                        CategoryId = counter,
+                        categoryName = cur
+                    };
+
+                    var cat = new Category()
+                    {
+                        Organization = temp.id,
+                        id_cat = counter,
+                        Categories = new CategoryName[] { catname }
+                    };
+
+                    counter++;
+                    lst.Add(new Organization(temp.id,temp.name,new Website[] { web },new Address[] { adr }, new HashSet<SocialAccount>(new SocialAccount[] { vksocial, instsocial }),new Category[] {cat }));
                 }
             }
             return lst;
         }
 
 
-        public void LoadToDB()
+        public void LoadToDB(string name)
         {
-            var comps = PrepareToDB();
-            Npgsql.NpgsqlConnection.GlobalTypeMapper.MapEnum<social_type>("social_type");
-            using (DBContext db = new DBContext())
+            var comps = PrepareToDB(name);
+            DBContext db = new DBContext();
+            foreach (var x in comps)
             {
-               
-                foreach (var tmp in comps)
-                    db.Add(tmp);
-                db.SaveChanges();
+                
+                var t = db.Organization.Find(x.Id);
+                if (t != null)
+                {
+                    t.SocialAccount = x.SocialAccount;
+                    foreach (var temp in t.SocialAccount)
+                    {   
+                       
+                        temp.OrganizationNavigation = t;
+                    }
+                    
+                    t.Website = x.Website;
+                        t.Website.First().OrganizationNavigation = t;
+/*
+                    t.Address = x.Address;
+                    foreach (var temp in t.Address)
+                        temp.OrganizationNavigation = t;
+                   /* 
+                     t.Categories = x.Categories;
+                     foreach (var temp in t.Categories)
+                     {   
+
+                         temp.OrganizationNavigation = t;
+                     }  
+                     /*
+                    db.Entry(t).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                    foreach(var tmp in t.Address)
+                    db.Entry(tmp).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                    foreach (var tmp in t.Website)
+                      db.Entry(tmp).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                    foreach (var tmp in t.SocialAccount)
+                        db.Entry(tmp).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                        */
+                }
+
+            
+              //  UpdateOrganization(x);
+
             }
+            db.SaveChanges();
+            
+            
         }
 
 
+        public void UpdateOrganization(Organization org)
+        {
+            Npgsql.NpgsqlConnection.GlobalTypeMapper.MapEnum<social_type>("social_type");
+            DBContext db = new DBContext();
+            var entity = db.Organization.Attach(org);
+            db.Entry(org).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            db.SaveChanges();
+
+        }
+
+    
 
 
         //выводим инфу о компаниях бизнес-типа
