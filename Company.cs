@@ -14,12 +14,17 @@ namespace SocNetParser
             // id для бдшки
         public int id { get; set; }
 
+        public IdTables ids { get; set; }
+
+
         public string name { get; set; }
          
         [JsonPropertyName("adress")]
         //список физических или юридических адресов
         public HashSet<string> adress { get; set; }
 
+
+        public int? InstAud { get; set; }
 
         [JsonIgnore]
         public HashSet<string> emails { get; set; }
@@ -53,17 +58,21 @@ namespace SocNetParser
         [JsonPropertyName("vk")]
         public string Vk { get { return vk?.Substring(vk.IndexOf('/')+1); } set { vk = value; } }
 
-        public string inst { get; set; } = "";
+        private string Inst;
+        [JsonPropertyName("inst")]
+        public string inst 
+        {
+            get 
+            { return Inst == null ? Inst : "https://www." + Inst+"/"; }
+            set
+            {
+                Inst = value;
+            }
+        }
 
         public string face { get; set; } = "";
 
-        public DateTime? registraionDomain { get; set; }
-
-        public DateTime? expireDomain { get; set; }
-
-        public DateTime? UptDomain { get; set; }
-
-
+      public TechSiteInfo techinfo { get; set; }
       
 
         //нужно для сериализации данных с json файла 
