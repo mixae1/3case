@@ -210,7 +210,7 @@ namespace SocNetParser
 
             File.WriteAllLines("InstData.json", new string[] { "" });
             Console.WriteLine("starting inst parser:");
-            //new3t.php -доработанный файл Марины ,  оригнальный на гите лежит с названием new3.php 
+          
             ProcessStartInfo info = new ProcessStartInfo("php.exe", "../../../new3t.php");
             info.UseShellExecute = false;
             info.ErrorDialog = false;
